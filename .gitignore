@@ -1,0 +1,3 @@
+# Simulink local files
+**/*.slxc
+**/slprj
