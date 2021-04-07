@@ -19,9 +19,9 @@ sim_constants.effective_area_sat_max = 31.0026; % m^2
 % Day of year	Date,       Mean Motion a           h           e
 % 189.19929602  8 July 2019 14.52524232 7095.553    717.4175    0.0010951
 
-% Epoch data
-sim_constants.start_date = [2019, 07, 08]; % [YYYY, MM, DD.dd]
-sim_constants.vernal_equinox = [2019, 03, 20];
+% Epoch data (Currently unused)
+sim_constants.start_date = [2019, 07, 08.19929602]; % [YYYY, MM, DD.dd]
+sim_constants.vernal_equinox = [2019, 03, 20.7594907];
 
 % Orbital elements (from data)
 sim_constants.a0 = sim_constants.R_Earth + 717.4175; % km
