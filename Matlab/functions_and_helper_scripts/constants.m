@@ -10,34 +10,27 @@ sim_constants.mu_Earth = sim_constants.G*sim_constants.M_Earth; % km3 s-2
 sim_constants.J2 = 0.00108263;        % SMAD p. 143
 sim_constants.dRAAN_dt_sun_synch = 360/(365.24*24*3600); % deg s-1
 
-% Epoch data
-sim_constants.start_date = [2021, 09, 16]; % [YYYY, MM, DD.dd]
-sim_constants.vernal_equinox = [2021, 03, 20];
-
 % Satellite data
-sim_constants.mass_sat = 14; % kg
-sim_constants.effective_area_sat_max = (1*1 + 2*6*1 + 3*1)*.01; % m^2
-sim_constants.effective_area_sat_min = (2*3)*.01;
-sim_constants.thruster_total_impulse = 12000; % N s
+sim_constants.mass_sat = 4.93; % kg
+sim_constants.effective_area_sat_max = 31.0026; % m^2
 
-% Orbital elements
-sim_constants.a0 = sim_constants.R_Earth + 550; % km
-sim_constants.e0 = 0;
-sim_constants.i0 = 97.58;  % deg
-sim_constants.MLT0 = 360-22.5; % deg -- 10:30am @ vernal equinox
-sim_constants.RAAN_offset0 = sim_constants.dRAAN_dt_sun_synch*seconds( ...
-        datetime(sim_constants.start_date) - ...
-            datetime(sim_constants.vernal_equinox) ...
-        ); % deg -- difference between RAAN0 and MLT0.
-sim_constants.RAAN0 = rem(sim_constants.MLT0 + ...
-    sim_constants.RAAN_offset0, 360);   
+% Orbital elements (from
+% https://secure.planetary.org/site/SPageNavigator/mission_control.html)
+% Day of year	Date,       Mean Motion a           h           e
+% 189.19929602  8 July 2019 14.52524232 7095.553    717.4175    0.0010951
 
-sim_constants.w0 = 359.99; % deg
-% As long as we're assuming e ~ 0, w0 doesn't matter. 
-% And so we'll set it to 0, which means that if dw/dt = 0,
-% the argument of latitude u = nu. But, because dw/dt from J2 < 0, we'll
-% actually set it to ~360 so that the plot doesn't need to wrap from 0 to
-% 360 at the beginning and we can better visualize the changes.
+% Epoch data
+sim_constants.start_date = [2019, 07, 08]; % [YYYY, MM, DD.dd]
+sim_constants.vernal_equinox = [2019, 03, 20];
+
+% Orbital elements (from data)
+sim_constants.a0 = sim_constants.R_Earth + 717.4175; % km
+sim_constants.e0 = 0.0010951;
+sim_constants.i0 = 24;  % deg
+
+% (arbitrarily selected) % TODO
+sim_constants.RAAN0 = 0; % deg %
+sim_constants.w0 = 0; % deg
 
 % This is arbitrary.
 sim_constants.M0 = 0; % rad
