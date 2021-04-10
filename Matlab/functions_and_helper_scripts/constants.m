@@ -13,6 +13,11 @@ sim_constants.dRAAN_dt_sun_synch = 360/(365.24*24*3600); % deg s-1
 % Satellite data
 sim_constants.mass_sat = 4.93; % kg
 sim_constants.effective_area_sat_max = 31.0026; % m^2
+sim_constants.angvel0 = deg2rad([-3; -5; .1]); %rad/s, initial angular rate
+sim_constants.I = [3.09578 0.03 0.01; 0.03 3.09578 0.02; 0.01 0.02 5.98190]; % inertia matrix, kg*m^2
+[sim_constants.I_princ, sim_constants.rotm] = rot_body2princ(sim_constants.I); 
+% I_princ: 3x1 vector of in-order ascending principle moments of inertia, kg*m^2
+% rotm: rotation matrix from principle axes to body
 
 % Orbital elements (from
 % https://secure.planetary.org/site/SPageNavigator/mission_control.html)
