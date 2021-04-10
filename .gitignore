@@ -1,3 +1,6 @@
 # Simulink local files
 **/*.slxc
 **/slprj
+
+# Matlba local files
+**/*.asv

@@ -19,6 +19,11 @@ sim_constants.mass_sat = 14; % kg
 sim_constants.effective_area_sat_max = (1*1 + 2*6*1 + 3*1)*.01; % m^2
 sim_constants.effective_area_sat_min = (2*3)*.01;
 sim_constants.thruster_total_impulse = 12000; % N s
+sim_constants.angvel0 = deg2rad([-3; -5; .1]); %rad/s, initial angular rate
+sim_constants.I = [3.09578 0.03 0.01; 0.03 3.09578 0.02; 0.01 0.02 5.98190]; % inertia matrix, kg*m^2
+[sim_constants.I_princ, sim_constants.rotm] = rot_body2princ(sim_constants.I); 
+% I_princ: 3x1 vector of in-order ascending principle moments of inertia, kg*m^2
+% rotm: rotation matrix from principle axes to body
 
 % Orbital elements
 sim_constants.a0 = sim_constants.R_Earth + 550; % km
