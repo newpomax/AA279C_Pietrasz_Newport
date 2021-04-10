@@ -8,7 +8,7 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     %% Postions for orbit visualizations
 
     sim_output.positions.x_XYZ = ECEF_positions.Data(:,1);
-    sim_output.positions.positions.y_XYZ = ECEF_positions.Data(:,2);
+    sim_output.positions.y_XYZ = ECEF_positions.Data(:,2);
     sim_output.positions.z_XYZ = ECEF_positions.Data(:,3);
 
     sim_output.positions.latitude_d = geod_positions.Data(:,1);

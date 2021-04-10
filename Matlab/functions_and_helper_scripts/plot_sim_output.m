@@ -27,7 +27,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
         surface(xE, yE, zE, 'FaceColor', 'blue', 'EdgeColor', 'black'); 
 
         % Plot Simulink output
-        plot3(sim_output.x_XYZ, sim_output.y_XYZ, sim_output.z_XYZ, ...
+        plot3(sim_output.positions.x_XYZ, sim_output.positions.y_XYZ, sim_output.positions.z_XYZ, ...
             'LineWidth', 1);
 
         % label n things
@@ -49,7 +49,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
         geoshow('landareas.shp', 'FaceColor', [0.5 1.0 0.5]);
 
         % Plot Simulink output
-        geoshow(sim_output.latitude_d, sim_output.longitude_d);
+        geoshow(sim_output.positions.latitude_d, sim_output.positions.longitude_d);
 
         % label n things
         title_text = ['Groundtrack of ', plot_format.mission_name, ' ', ...
