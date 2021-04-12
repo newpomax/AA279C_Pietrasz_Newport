@@ -25,21 +25,21 @@ function plot_polhode(w0, I,wout,plot_name)
 
     % Set legend
     legend('Energy Ellipse','Momentum Ellipse','Polhode');
-    xlabel('X'); ylabel('Y'); zlabel('Z');
-    title('Polhode Plot');
+    xlabel('\omega_x, rad/s'); ylabel('\omega_y, rad/s'); zlabel('\omega_z, rad/s');
+    title(sprintf('Polhode Plot, Initial Ang Vel [%0.1f, %0.1f, %0.1f] deg/s', rad2deg(w0)));
     view(3); axis equal;
     
     %% Plot Pohlode along axes
     subplot(3,5,[4 5]); hold on;
     plot(wout(:,2),wout(:,3),'-o','MarkerSize',2); 
-    xlabel('Y'); ylabel('Z'); axis equal;
+    xlabel('\omega_y, rad/s'); ylabel('\omega_z, rad/s'); axis equal;
     title('Pohlode Viewed Along X');
     subplot(3,5,[9 10]); hold on;
     plot(wout(:,1),wout(:,3),'-o','MarkerSize',2); 
-    xlabel('X'); ylabel('Z'); axis equal;
+    xlabel('\omega_x, rad/s'); ylabel('\omega_z, rad/s'); axis equal;
     title('Pohlode Viewed Along Y');
     subplot(3,5,[14 15]); hold on;
     plot(wout(:,1),wout(:,2),'-o','MarkerSize',2); 
-    xlabel('X'); ylabel('Y'); axis equal;
+    xlabel('\omega_x, rad/s'); ylabel('\omega_y, rad/s'); axis equal;
     title('Pohlode Viewed Along z');
 end
