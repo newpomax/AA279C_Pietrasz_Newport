@@ -12,7 +12,7 @@ constants;
 % Simulation settings
 % Or set simulation_time in thrust_input_file.
 sim_constants.simulation_time = 3.5*3600;
-sim_constants.time_step = 10; % s
+sim_constants.time_step = 1; % s
 sim_constants.tolerance = 10^-8;
 
 % Plot formatting
@@ -29,7 +29,7 @@ sim('Propagator');
 
 % Extract + plot data
 sim_output = extract_sim_output(sim_constants, plot_format, OE, dOE_dt, ...
-    ECEF_positions, geod_positions);
+    w, ECEF_positions, geod_positions);
 plot_sim_output(sim_constants, sim_output, plot_format);
 
 %% beep beep

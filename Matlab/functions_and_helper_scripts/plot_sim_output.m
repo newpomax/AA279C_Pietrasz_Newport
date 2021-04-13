@@ -203,4 +203,40 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel(time_label);
     ylabel('dE/dt [rad/s]');
     
+    %% Plot attitude
+
+    % w_x
+    subplot(1,3,1);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.w.x, df), 2);
+
+    title_text = ['w_x of ', mission_name, ' in s/c principle axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('w_x [rad/s]');
+    
+    % w_y
+    subplot(1,3,2);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.w.y, df), 2);
+
+    title_text = ['w_y of ', mission_name, ' in s/c principle axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('w_y [rad/s]');
+    
+    % w_z
+    subplot(1,3,3);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.w.z, df), 2);
+
+    title_text = ['w_z of ', mission_name, ' in s/c principle axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('w_z [rad/s]');
+
+    
 end
