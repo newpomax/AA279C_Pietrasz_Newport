@@ -17,16 +17,16 @@ sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate
 sim_constants.I = [3.10553 -0.00011 -0.00003;
                    -0.00011 3.10289 -0.00005;
                    -0.00003 -0.00005 5.98305]; % inertia matrix, kg*m^2
-[sim_constants.I_princ, sim_constants.rotm] = rot_body2princ(sim_constants.I); 
 % I_princ: 3x1 vector of in-order ascending principle moments of inertia, kg*m^2
 % rotm: rotation matrix from principle axes to body
+[sim_constants.I_princ, sim_constants.rotm] = rot_body2princ(sim_constants.I); 
 
 % Orbital elements (from
 % https://secure.planetary.org/site/SPageNavigator/mission_control.html)
 % Day of year	Date,       Mean Motion a           h           e
 % 189.19929602  8 July 2019 14.52524232 7095.553    717.4175    0.0010951
 
-% Epoch data (Currently unused)
+% Epoch data (currently unused)
 sim_constants.start_date = [2019, 07, 08.19929602]; % [YYYY, MM, DD.dd]
 sim_constants.vernal_equinox = [2019, 03, 20.7594907];
 
@@ -35,8 +35,8 @@ sim_constants.a0 = sim_constants.R_Earth + 717.4175; % km
 sim_constants.e0 = 0.0010951;
 sim_constants.i0 = 24;  % deg
 
-% (arbitrarily selected) % TODO
-sim_constants.RAAN0 = 0; % deg %
+% (arbitrarily selected)
+sim_constants.RAAN0 = 0; % deg
 sim_constants.w0 = 0; % deg
 
 % This is arbitrary.
