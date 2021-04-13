@@ -21,7 +21,7 @@ function plot_polhode(w0, I,wout,plot_name)
     h2 = surf(X1,X2,X3);
     set(h2,'FaceColor',[0 0 1],'FaceAlpha',0.5,'FaceLighting','gouraud','EdgeColor','none');
     % Plotting ohlode
-    plot3(wout(:,1),wout(:,2),wout(:,3),'r-o','LineWidth',2,'MarkerSize',2);
+    plot3(wout(:,1),wout(:,2),wout(:,3),'r-x','LineWidth',2,'MarkerSize',4);
 
     % Set legend
     legend('Energy Ellipse','Momentum Ellipse','Polhode');
@@ -31,15 +31,15 @@ function plot_polhode(w0, I,wout,plot_name)
     
     %% Plot Pohlode along axes
     subplot(3,5,[4 5]); hold on;
-    plot(wout(:,2),wout(:,3),'-o','MarkerSize',2); 
+    plot(wout(:,2),wout(:,3),'-x','MarkerSize',4); 
     xlabel('\omega_y, rad/s'); ylabel('\omega_z, rad/s'); axis equal;
     title('Pohlode Viewed Along X');
     subplot(3,5,[9 10]); hold on;
-    plot(wout(:,1),wout(:,3),'-o','MarkerSize',2); 
+    plot(wout(:,1),wout(:,3),'-x','MarkerSize',4); 
     xlabel('\omega_x, rad/s'); ylabel('\omega_z, rad/s'); axis equal;
     title('Pohlode Viewed Along Y');
     subplot(3,5,[14 15]); hold on;
-    plot(wout(:,1),wout(:,2),'-o','MarkerSize',2); 
+    plot(wout(:,1),wout(:,2),'-x','MarkerSize',4); 
     xlabel('\omega_x, rad/s'); ylabel('\omega_y, rad/s'); axis equal;
     title('Pohlode Viewed Along z');
 end
