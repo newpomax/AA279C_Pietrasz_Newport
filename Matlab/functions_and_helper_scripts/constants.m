@@ -14,6 +14,7 @@ sim_constants.dRAAN_dt_sun_synch = 360/(365.24*24*3600); % deg s-1
 sim_constants.mass_sat = 4.93; % kg
 sim_constants.effective_area_sat_max = 31.0026; % m^2
 sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate
+sim_constants.q0 = [0; 0; 0; 1]; % body axes initially aligned with inertial
 sim_constants.I = [3.10553 -0.00011 -0.00003;
                    -0.00011 3.10289 -0.00005;
                    -0.00003 -0.00005 5.98305]; % inertia matrix, kg*m^2
