@@ -12,13 +12,21 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
 
     df = plot_format.downsample_factor;
     downsampled_time = downsample(sim_output.time, df);
-
+    
+    if plot_format.dock_plots
+       set(0,'DefaultFigureWindowStyle','docked'); 
+    end
+    
     if plot_format.plot_orbit_visuals
         figure('Name', strcat(mission_name, ' orbit visualization'));
-        set(gcf, 'Position',  [0, 0, 500, 800])
+        if ~plot_format.dock_plots
+            set(gcf, 'Position',  [0, 0, 500, 800]);
+            subplot(2,1,1);
+        else
+            subplot(1,3,1);
+        end
 
         % 3D
-        subplot(2,1,1);
         hold on;
 
         % Plot the Earth for context
@@ -38,11 +46,16 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
         ylabel('km');
         zlabel('km');
         axis equal;
+        pbaspect([1 1 1]);
         view(3);
         grid on;
 
         % Groundtrack
-        subplot(2,1,2);
+        if plot_format.dock_plots
+            subplot(1,3,[2 3]);
+        else
+            subplot(2,1,2);
+        end
         hold on;
 
         % Plot the Earth for context
@@ -62,7 +75,9 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
 
     % OEs
     figure('Name', strcat(mission_name, ' OEs'));
-    set(gcf, 'Position',  [0, 0, 1200, 600])
+    if ~plot_format.dock_plots
+        set(gcf, 'Position',  [0, 0, 1200, 600])
+    end
 
     % semimajor axis
     subplot(2,3,1);
@@ -133,7 +148,9 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     %% Plot dOE/dt
     
     figure('Name', strcat(mission_name, ' dOE/dts'));
-    set(gcf, 'Position',  [1200, 0, 1200, 600])
+    if ~plot_format.dock_plots
+        set(gcf, 'Position',  [1200, 0, 1200, 600])
+    end
 
     % semimajor axis
     subplot(2,3,1);
@@ -203,13 +220,13 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel(time_label);
     ylabel('dE/dt [rad/s]');
     
-    %% Plot attitude
-
+    %% Plot Angular Velocity + Momentum in Principal Axes
+    figure('Name',strcat(mission_name, ' Princ. Axes Ang. Vel. & Mom.'));
     % w_x
-    subplot(1,3,1);
+    subplot(2,3,1);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.w.x, df), 2);
+    scatter(downsampled_time, downsample(sim_output.attitude.wx, df), 2);
 
     title_text = ['w_x of ', mission_name, ' in s/c principle axes'];
     title(title_text);
@@ -217,10 +234,10 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     ylabel('w_x [rad/s]');
     
     % w_y
-    subplot(1,3,2);
+    subplot(2,3,2);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.w.y, df), 2);
+    scatter(downsampled_time, downsample(sim_output.attitude.wy, df), 2);
 
     title_text = ['w_y of ', mission_name, ' in s/c principle axes'];
     title(title_text);
@@ -228,15 +245,115 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     ylabel('w_y [rad/s]');
     
     % w_z
-    subplot(1,3,3);
+    subplot(2,3,3);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.w.z, df), 2);
+    scatter(downsampled_time, downsample(sim_output.attitude.wz, df), 2);
 
     title_text = ['w_z of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
     ylabel('w_z [rad/s]');
+    
+    % L_x
+    subplot(2,3,4);
+    hold on;
 
+    scatter(downsampled_time, downsample(sim_output.attitude.Lx, df), 2);
+
+    title_text = ['L_x of ', mission_name, ' in s/c principle axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('L_x [kg m^2 /s]');
+    
+    % L_y
+    subplot(2,3,5);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.wy, df), 2);
+
+    title_text = ['L_y of ', mission_name, ' in s/c principle axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('L_y [kg m^2 /s]');
+    
+    % L_z
+    subplot(2,3,6);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.wz, df), 2);
+
+    title_text = ['L_z of ', mission_name, ' in s/c principle axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('L_z [kg m^2 /s]');
+    
+     %% Plot Angular Velocity + Momentum in Principal Axes
+    figure('Name',strcat(mission_name, ' Inertial Axes Ang. Vel. & Mom.'));
+    % w_1
+    subplot(2,3,1);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.w1, df), 2);
+
+    title_text = ['w_1 of ', mission_name, ' in inertial axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('w_1 [rad/s]');
+    
+    % w_2
+    subplot(2,3,2);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.w2, df), 2);
+
+    title_text = ['w_2 of ', mission_name, ' in inertial axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('w_2 [rad/s]');
+    
+    % w_3
+    subplot(2,3,3);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.w3, df), 2);
+
+    title_text = ['w_3 of ', mission_name, ' in inertial axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('w_3 [rad/s]');
+    
+    % L_1
+    subplot(2,3,4);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.L1, df), 2);
+
+    title_text = ['L_1 of ', mission_name, ' in inertial axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('L_1 [kg m^2 /s]');
+    
+    % L_2
+    subplot(2,3,5);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.L2, df), 2);
+
+    title_text = ['L_2 of ', mission_name, ' in inertial axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('L_2 [kg m^2 /s]');
+    
+    % L_3
+    subplot(2,3,6);
+    hold on;
+
+    scatter(downsampled_time, downsample(sim_output.attitude.L3, df), 2);
+
+    title_text = ['L_3 of ', mission_name, ' in inertial axes'];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('L_3 [kg m^2 /s]');
     
 end
