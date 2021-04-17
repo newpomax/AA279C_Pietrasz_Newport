@@ -12,7 +12,7 @@ constants;
 % Simulation settings
 % Or set simulation_time in thrust_input_file.
 sim_constants.simulation_time = 3.5*3600;
-sim_constants.time_step = 1; % s
+sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
 
 % Plot formatting
