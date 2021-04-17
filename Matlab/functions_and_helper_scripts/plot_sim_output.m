@@ -296,10 +296,10 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
 
     scatter(downsampled_time, downsample(sim_output.attitude.w1, df), 2);
 
-    title_text = ['w_1 of ', mission_name, ' in inertial axes'];
+    title_text = ['\omega_1 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
-    ylabel('w_1 [rad/s]');
+    ylabel('\omega_1 [rad/s]');
     
     % w_2
     subplot(2,3,2);
@@ -307,10 +307,10 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
 
     scatter(downsampled_time, downsample(sim_output.attitude.w2, df), 2);
 
-    title_text = ['w_2 of ', mission_name, ' in inertial axes'];
+    title_text = ['\omega_2 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
-    ylabel('w_2 [rad/s]');
+    ylabel('\omega_2 [rad/s]');
     
     % w_3
     subplot(2,3,3);
@@ -318,10 +318,10 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
 
     scatter(downsampled_time, downsample(sim_output.attitude.w3, df), 2);
 
-    title_text = ['w_3 of ', mission_name, ' in inertial axes'];
+    title_text = ['\omega_3 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
-    ylabel('w_3 [rad/s]');
+    ylabel('\omega_3 [rad/s]');
     
     % L_1
     subplot(2,3,4);
@@ -356,4 +356,24 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel(time_label);
     ylabel('L_3 [kg m^2 /s]');
     
+    %% Plot Herpohlode
+    figure('Name',strcat(mission_name, ' Herpohlode'));
+    hold on; 
+    
+    plot3(sim_output.attitude.w1,sim_output.attitude.w2,sim_output.attitude.w3)
+    L = 100*norm([sim_output.attitude.L1(1) sim_output.attitude.L2(1) sim_output.attitude.L3(1)]);
+    
+    start = mean([sim_output.attitude.w1 sim_output.attitude.w2 sim_output.attitude.w3]);
+    finish = [sim_output.attitude.L1(1) sim_output.attitude.L2(1) sim_output.attitude.L3(1)]/L;
+    quiver3(start(1),start(2),start(3),finish(1),finish(2),finish(3));
+
+    legend('Herpohlode','Ang. Momentum');
+    view(3);
+    axis equal;
+    
+    title_text = ['Herpohlode of ', mission_name];
+    title(title_text);
+    xlabel('\omega_1');
+    ylabel('\omega_2');
+    zlabel('\omega_3');
 end

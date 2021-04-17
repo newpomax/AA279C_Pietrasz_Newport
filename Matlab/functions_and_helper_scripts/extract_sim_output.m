@@ -48,9 +48,8 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.attitude.q4 = q.Data(:,4); % unitless
     
     sim_output.attitude.A = permute(A.Data, [3,1,2]); % unitless, make time the first index
-    
+    sim_output.attitude.princ2inert = permute(A.Data, [3,2,1]); % inverse of A, rotates principal to inertial
     %% For attitude plots in inertial axes
-    sim_output.attitude.princ2inert = zeros(size(sim_output.attitude.A));
     sim_output.attitude.w1 = zeros(size(sim_output.attitude.wx));
     sim_output.attitude.w2 = zeros(size(sim_output.attitude.wx));
     sim_output.attitude.w3 = zeros(size(sim_output.attitude.wx));
@@ -60,15 +59,14 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     
     W = [sim_output.attitude.wx, sim_output.attitude.wy, sim_output.attitude.wz];
     for i = 1:size(sim_output.attitude.A,1)
-       R = squeeze(sim_output.attitude.A(i,:,:)).'; % inverse, rotates principal to inertial
-       sim_output.attitude.princ2inert(i,:,:) = R;
-       Winertial = (R*(W.')).'; % convert to inertial axes
-       sim_output.attitude.w1 = Winertial(:,1);
-       sim_output.attitude.w2 = Winertial(:,2);
-       sim_output.attitude.w3 = Winertial(:,3);
-       L = (R*(diag(sim_constants.I_princ)*(W.'))).'; % calculate momentum in principal, convert to inertial
-       sim_output.attitude.L1 = L(:,1);
-       sim_output.attitude.L2 = L(:,2);
-       sim_output.attitude.L3 = L(:,3);
+       R = squeeze(sim_output.attitude.princ2inert(i,:,:)); 
+       Winertial = (R*(W(i,:).')).'; % convert to inertial axes
+       sim_output.attitude.w1(i) = Winertial(1);
+       sim_output.attitude.w2(i) = Winertial(2);
+       sim_output.attitude.w3(i) = Winertial(3);
+       L = (R*(diag(sim_constants.I_princ)*(W(i,:).'))).'; % calculate momentum in principal, convert to inertial
+       sim_output.attitude.L1(i) = L(1);
+       sim_output.attitude.L2(i) = L(2);
+       sim_output.attitude.L3(i) = L(3);
     end                                               
 end
