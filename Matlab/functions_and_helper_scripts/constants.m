@@ -49,5 +49,5 @@ orbital_period = 2*pi/sim_constants.n0; % s
 % Default sim parameters in case they're not set elsewhere (should be set
 % in run_sim or the thrust_input_file)
 sim_constants.simulation_time = .067*24*3600; % day -> hr -> s
-sim_constants.time_step = 10; % s
+sim_constants.time_step = 0.5; % s
 sim_constants.tolerance = 10^-8;
