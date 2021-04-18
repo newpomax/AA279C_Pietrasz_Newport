@@ -288,7 +288,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel(time_label);
     ylabel('L_z [kg m^2 /s]');
     
-     %% Plot Angular Velocity + Momentum in Principal Axes
+     %% Plot Angular Velocity + Momentum in Inertial Axes
     figure('Name',strcat(mission_name, ' Inertial Axes Ang. Vel. & Mom.'));
     % w_1
     subplot(2,3,1);
@@ -328,6 +328,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L1, df), 2);
+    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2]));   
 
     title_text = ['L_1 of ', mission_name, ' in inertial axes'];
     title(title_text);
@@ -339,6 +340,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L2, df), 2);
+    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2])); 
 
     title_text = ['L_2 of ', mission_name, ' in inertial axes'];
     title(title_text);
@@ -350,6 +352,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L3, df), 2);
+    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2])); 
 
     title_text = ['L_3 of ', mission_name, ' in inertial axes'];
     title(title_text);
@@ -365,7 +368,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     
     start = mean([sim_output.attitude.w1 sim_output.attitude.w2 sim_output.attitude.w3]);
     finish = [sim_output.attitude.L1(1) sim_output.attitude.L2(1) sim_output.attitude.L3(1)]/L;
-    quiver3(start(1),start(2),start(3),finish(1),finish(2),finish(3));
+    quiver3(start(1),start(2),start(3),finish(1),finish(2),finish(3),'LineWidth',2);
 
     legend('Herpohlode','Ang. Momentum');
     view(3);
