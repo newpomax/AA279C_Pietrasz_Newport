@@ -1,5 +1,5 @@
 function sim_output = extract_sim_output(sim_constants, plot_format, ...
-    OE, dOE_dt, w, q, A, ECI_positions, ECEF_positions, geod_positions)
+    OE, dOE_dt, w, q, A, ECI_positions, ECEF_positions, RTN2ECI, geod_positions)
     %% Post-process data output from simulation for plotting and calcs
 
     sim_output = struct;
@@ -16,6 +16,8 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
 
     sim_output.positions.latitude_d = geod_positions.Data(:,1);
     sim_output.positions.longitude_d = geod_positions.Data(:,2);
+    
+    sim_output.positions.RTN2ECI = permute(RTN2ECI.Data, [3 1 2]);
 
     %% For OE & dOE/dt plots
 

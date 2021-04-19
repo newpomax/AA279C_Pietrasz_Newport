@@ -6,15 +6,15 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     df = fix(length(sim_output.time)/N); 
     % Find last time index of first orbit using orbital E switch from 2pi to 0
     tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1) - df;
-    figure('Name',strcat(mission_name, ' Coordinate Triads')); hold on;
-    %% Plot Coord Triads in position in ECI
-    subplot(2,3,[1 2 4 5]); hold on;
+    figure('Name',strcat(mission_name, ' Triads in ECI')); hold on;
+    %% Plot Princ, Body Coord Triads in position in ECI
+    subplot(1,2,1); hold on;
    
     % Get ECI locations
     X = downsample(sim_output.positions.x_123(1:tend,:), df);
     Y = downsample(sim_output.positions.y_123(1:tend,:), df);
     Z = downsample(sim_output.positions.z_123(1:tend,:), df);
-    l = 0.9*norm([diff(X(1:2)) diff(Y(1:2)) diff(Z(1:2))]); %500; % Length of coord axes in km
+    l = 0.9*norm([diff(X(1:2)) diff(Y(1:2)) diff(Z(1:2))]); % Length of coord axes in km
     % Make coordinate matrices (where columns are directions of vectors)
     R = downsample(sim_output.attitude.princ2inert(1:tend,:,:), df);
     W = zeros(size(R));
@@ -28,15 +28,16 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     plot_triad(X,Y,Z,Q,l,[1 0 0],'Inertial');
     plot_triad(X,Y,Z,R,l,[0 1 0],'Principal');
     plot_triad(X,Y,Z,W,l,[0 0 1],'Body');
+
     % Plot Earth for reference, but transparent
     R_Earth = sim_constants.R_Earth;
     [xE, yE, zE] = ellipsoid(0, 0, 0, R_Earth, R_Earth, R_Earth, 50);
     surface(xE, yE, zE, 'FaceColor', 'blue', 'EdgeColor', 'none','FaceAlpha',0.1,'DisplayName','Earth'); 
 
-    title_text = ['Coordinate Triads of ', mission_name, ...
+    title_text = ['Body & Principal Triads of ', mission_name, ...
         ' in ECI reference frame'];
     title(title_text);
-    legend('Location','westoutside');
+    legend('Location','west');
     xlabel('X [km]');
     ylabel('Y [km]');
     zlabel('Z [km]');
@@ -45,21 +46,49 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     view(3);
     grid on;
     
-    %% Plot trace of coordinate tips for principal, body axes in inertial frame
+    %% Plot RTN Coord Triad in position in ECI
+    subplot(1,2,2); hold on;
+    RTN = downsample(sim_output.positions.RTN2ECI(1:tend,:,:), df);
+    plot_triad(X,Y,Z,Q,l,[1 0 0],'Inertial');
+    plot_triad(X,Y,Z,RTN,l,[1 165/255 0],'RTN');
+    % Plot Earth for reference, but transparent
+    R_Earth = sim_constants.R_Earth;
+    [xE, yE, zE] = ellipsoid(0, 0, 0, R_Earth, R_Earth, R_Earth, 50);
+    surface(xE, yE, zE, 'FaceColor', 'blue', 'EdgeColor', 'none','FaceAlpha',0.1,'DisplayName','Earth'); 
+
+    title_text = ['RTN Coordinate Triad of ', mission_name, ...
+        ' in ECI'];
+    title(title_text);
+    legend('Location','west');
+    xlabel('X [km]');
+    ylabel('Y [km]');
+    zlabel('Z [km]');
+    axis equal;
+    pbaspect([1 1 1]);
+    view(3);
+    grid on;
+    
+    %% Plot trace of coordinate tips for principal, body, and RTN axes in inertial frame
+    figure('Name',strcat(mission_name, ' Triads in Time')); hold on;
     tend = fix(3*tend/100); % only plot a few percent of the orbital period to keep plot uncluttered
-    axes_name = 'Principal Axes';
     sim_time = sim_output.time(1:tend); 
     Nax = 3; % number of actual axes to plot (unit length arrows along XYZ)
-    ax_reduction = round(length(sim_time)/Nax); % lower sampling for axes plotting
-    time_df3 = downsample(sim_time, ax_reduction); 
-    for i = 1:2
-        subplot(2,3,3*i); hold on;
-        R = sim_output.attitude.princ2inert(1:tend,:,:);
+    ax_reduction = fix(length(sim_time)/(Nax-1) - 1); % lower sampling for axes plotting
+    time_df3 = downsample(sim_time,ax_reduction);
+    axes_name = 'Principal Axes';
+    R = sim_output.attitude.princ2inert(1:tend,:,:);
+    h = [];
+    colormap winter;
+    for i = 1:3
+        h = [h; subplot(1,3,i)]; hold on;
         if i == 2
             for k = 1:length(R)
                 R(k,:,:) = (sim_constants.rotm.')*squeeze(R(k,:,:)) ; % inertial->princ->body
             end
             axes_name = 'Body Axes';
+        elseif i == 3
+            R = sim_output.positions.RTN2ECI(1:tend,:,:);
+            axes_name = 'RTN Axes';          
         end
         Xx = squeeze(R(:,1,1)); Yx = squeeze(R(:,1,2)); Zx = squeeze(R(:,1,3));
         Xy = squeeze(R(:,2,1)); Yy = squeeze(R(:,2,2)); Zy = squeeze(R(:,2,3));
@@ -67,13 +96,9 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         patch([Xx; nan],[Xy; nan],[Xz; nan],[sim_time; nan],'FaceColor','none','EdgeColor','interp','DisplayName','X Trace');
         patch([Yx; nan],[Yy; nan],[Yz; nan],[sim_time; nan],'FaceColor','none','EdgeColor','interp','DisplayName','Y Trace');
         patch([Zx; nan],[Zy; nan],[Zz; nan],[sim_time; nan],'FaceColor','none','EdgeColor','interp','DisplayName','Z Trace');
-        h = colorbar('westoutside');
-
-        h.Position = h.Position - [0.08 0 0 0];
-        set(get(h,'label'),'string',time_label);
-        R = downsample(R, ax_reduction);
+        Rdown = downsample(R, ax_reduction);
         cmap = colormap;
-        plot_triad(zeros(length(R),1),zeros(length(R),1),zeros(length(R),1),R,1,cmap(1+round(255*time_df3/time_df3(end)),:));
+        plot_triad(zeros(length(Rdown),1),zeros(length(Rdown),1),zeros(length(Rdown),1),Rdown,1,cmap(1+round(255*time_df3/time_df3(end)),:));
         xlabel('1');
         ylabel('2');
         zlabel('3');
@@ -82,9 +107,16 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         view(3);
         grid on;
         title_text = [axes_name ' of ', mission_name, ...
-            ' in inertial reference frame'];
+            ' w.r.t. ECI'];
         title(title_text);
     end
+      cbh = colorbar(h(1)); 
+      h(1).Position(3:4) = h(2).Position(3:4);
+      set(get(cbh,'label'),'string',time_label);
+     % Reposition to figure's left edge, centered vertically
+      cbh.Position(1) = .95-cbh.Position(3);
+      cbh.Position(2) = 0.5-cbh.Position(4)/2;
+
     %% plot_triad
     % plots a coordinate trio defined by the rotation matrix R centered at 
     % (x,y,z) in inertial space. l sets the length of the plotted coordinates
@@ -96,6 +128,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
             rotc = true;
             [~,maxi] = max(c);
             c = [c; abs(rot(maxi,15)*(c.')).'; abs(rot(maxi,30)*(c.')).'];
+            c(c > 1) = 1;
         end
         wid = 1;
         aut = 'off';
@@ -113,7 +146,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
             quiver3(X,Y,Z, zdir(:,1), zdir(:,2), zdir(:,3),'Color', squeeze(c(3,:)), ...
                        'LineWidth',wid,'DisplayName',strcat(name, '_Z'),'AutoScale',aut);
         else
-            for j = 1:length(c)
+            for j = 1:size(c,1)
                 quiver3(X(j),Y(j),Z(j), xdir(j,1), xdir(j,2), xdir(j,3),'Color', squeeze(c(j,:)), ...
                             'LineWidth',wid,'AutoScale',aut);
                 quiver3(X(j),Y(j),Z(j), ydir(j,1), ydir(j,2), ydir(j,3),'Color', squeeze(c(j,:)), ...
