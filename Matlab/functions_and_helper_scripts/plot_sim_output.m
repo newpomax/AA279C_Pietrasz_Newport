@@ -379,4 +379,46 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel('\omega_1');
     ylabel('\omega_2');
     zlabel('\omega_3');
+    
+    %% Plot coordiante triads (for first orbit only)
+    if plot_format.plot_triads
+        figure('Name',strcat(mission_name, ' Coordinate Triads')); hold on;
+        l = 500; % Length of coord axes in km
+        df2 = 10*df; % Lower downsample rate so axes are more legible
+        % Find last time index of first orbit using orbital E switch from 2pi to 0
+        tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1) - df2;
+        % Get ECI locations
+        X = downsample(sim_output.positions.x_123(1:tend,:), df2);
+        Y = downsample(sim_output.positions.y_123(1:tend,:), df2);
+        Z = downsample(sim_output.positions.z_123(1:tend,:), df2);
+        % Make coordinate matrices (where columns are directions of vectors)
+        R = downsample(sim_output.attitude.princ2inert(1:tend,:,:), df2);
+        W = zeros(size(R));
+        Q = zeros(size(R));
+        for i = 1:size(R,1)
+           W(i,:,:) = (sim_constants.rotm.')*squeeze(R(i,:,:)) ; % inertial->princ->body
+           Q(i,:,:) = eye(3); % inertial -> inertial
+        end
+        
+        % Plot inertial, principal, and body coordinates at each point
+        plot_triad(X,Y,Z,Q,l,[1 0 0],'Inertial');
+        plot_triad(X,Y,Z,R,l,[0 1 0],'Principal');
+        plot_triad(X,Y,Z,W,l,[0 0 1],'Body');
+        % Plot Earth for reference, but transparent
+        R_Earth = sim_constants.R_Earth;
+        [xE, yE, zE] = ellipsoid(0, 0, 0, R_Earth, R_Earth, R_Earth, 50);
+        surface(xE, yE, zE, 'FaceColor', 'blue', 'EdgeColor', 'none','FaceAlpha',0.1,'DisplayName','Earth'); 
+        
+        title_text = ['Coordinate Triads of ', mission_name, ...
+            ' in ECI reference frame'];
+        title(title_text);
+        legend;
+        xlabel('km');
+        ylabel('km');
+        zlabel('km');
+        axis equal;
+        pbaspect([1 1 1]);
+        view(3);
+        grid on;
+    end
 end

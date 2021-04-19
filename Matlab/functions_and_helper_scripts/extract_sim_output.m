@@ -1,12 +1,15 @@
 function sim_output = extract_sim_output(sim_constants, plot_format, ...
-    OE, dOE_dt, w, q, A, ECEF_positions, geod_positions)
+    OE, dOE_dt, w, q, A, ECI_positions, ECEF_positions, geod_positions)
     %% Post-process data output from simulation for plotting and calcs
 
     sim_output = struct;
     sim_output.time = OE.time/plot_format.seconds_to_increment;
 
     %% Postions for orbit visualizations
-
+    sim_output.positions.x_123 = ECI_positions.Data(:,1);
+    sim_output.positions.y_123 = ECI_positions.Data(:,2);
+    sim_output.positions.z_123 = ECI_positions.Data(:,3);
+    
     sim_output.positions.x_XYZ = ECEF_positions.Data(:,1);
     sim_output.positions.y_XYZ = ECEF_positions.Data(:,2);
     sim_output.positions.z_XYZ = ECEF_positions.Data(:,3);

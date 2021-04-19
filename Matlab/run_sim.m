@@ -16,10 +16,11 @@ sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
 
 % Plot formatting
-plot_format.downsample_factor = 10;
+plot_format.downsample_factor = 100;
 plot_format.mission_name = 'LS2';
 plot_format.plot_orbit_visuals = true;
 plot_format.dock_plots = true;
+plot_format.plot_triads = true;
 % set 's', 'min', 'hours', 'days', or 'years'
 plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
@@ -30,7 +31,7 @@ sim('Propagator');
 
 % Extract + plot data
 sim_output = extract_sim_output(sim_constants, plot_format, OE, dOE_dt, ...
-    w, q, A, ECEF_positions, geod_positions);
+    w, q, A, ECI_positions, ECEF_positions, geod_positions);
 plot_sim_output(sim_constants, sim_output, plot_format);
 
 %% beep beep
