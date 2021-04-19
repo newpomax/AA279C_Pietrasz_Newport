@@ -1,7 +1,6 @@
 
 function plot_coordtriads(sim_constants, sim_output, plot_format)
     mission_name = plot_format.mission_name;
-    time_label = ['Time [', num2str(plot_format.time_increments), ']'];
     N = 100; % only 100 triads per orbit, so axes are easy to see
     df = fix(length(sim_output.time)/N); 
     % Find last time index of first orbit using orbital E switch from 2pi to 0
@@ -37,7 +36,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     title_text = ['Body & Principal Triads of ', mission_name, ...
         ' in ECI reference frame'];
     title(title_text);
-    legend('Location','west');
+    legend('Location','eastoutside');
     xlabel('X [km]');
     ylabel('Y [km]');
     zlabel('Z [km]');
@@ -59,7 +58,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     title_text = ['RTN Coordinate Triad of ', mission_name, ...
         ' in ECI'];
     title(title_text);
-    legend('Location','west');
+    legend('Location','eastoutside');
     xlabel('X [km]');
     ylabel('Y [km]');
     zlabel('Z [km]');
@@ -71,8 +70,8 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     %% Plot trace of coordinate tips for principal, body, and RTN axes in inertial frame
     figure('Name',strcat(mission_name, ' Triads in Time')); hold on;
     tend = fix(3*tend/100); % only plot a few percent of the orbital period to keep plot uncluttered
-    sim_time = sim_output.time(1:tend); 
-    Nax = 3; % number of actual axes to plot (unit length arrows along XYZ)
+    sim_time = sim_output.time(1:tend)*plot_format.seconds_to_increment; 
+    Nax = 2; % number of actual axes to plot (unit length arrows along XYZ)
     ax_reduction = fix(length(sim_time)/(Nax-1) - 1); % lower sampling for axes plotting
     time_df3 = downsample(sim_time,ax_reduction);
     axes_name = 'Principal Axes';
@@ -112,7 +111,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     end
       cbh = colorbar(h(1)); 
       h(1).Position(3:4) = h(2).Position(3:4);
-      set(get(cbh,'label'),'string',time_label);
+      set(get(cbh,'label'),'string','Time [sec]');
      % Reposition to figure's left edge, centered vertically
       cbh.Position(1) = .95-cbh.Position(3);
       cbh.Position(2) = 0.5-cbh.Position(4)/2;
