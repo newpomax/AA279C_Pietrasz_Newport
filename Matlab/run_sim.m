@@ -14,7 +14,7 @@ constants;
 sim_constants.simulation_time = 3.5*3600;
 sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
-sim_constants.use_euler = false; % use 312 Euler angles for attitude rather than quaternions
+sim_constants.use_euler = true; % use 312 Euler angles for attitude rather than quaternions
 
 % Plot formatting
 plot_format.downsample_factor = 100;
