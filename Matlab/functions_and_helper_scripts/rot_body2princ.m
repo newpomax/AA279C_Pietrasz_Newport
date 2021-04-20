@@ -35,5 +35,6 @@ function [I_princ, R] = rot_body2princ(I)
         R_addl = rotx(-90)*roty(180)*R_addl;
     end
     R = R/R_addl;
+    R(:,2) = cross(R(3,:),R(1,:)); % ensure that trio is right-handed
 end
     

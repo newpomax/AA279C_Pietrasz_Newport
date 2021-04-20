@@ -359,8 +359,9 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel(time_label);
     ylabel('L_3 [kg m^2 /s]');
     
-    %% Plot Herpohlode
-    figure('Name',strcat(mission_name, ' Herpolhode'));
+    %% Plot Herpohlode & RTN Frame Ang Vel
+    figure('Name',strcat(mission_name, ' Herpolhode & RTN'));
+    subplot(1,2,1);
     hold on; 
     
     plot3(sim_output.attitude.w1,sim_output.attitude.w2,sim_output.attitude.w3)
@@ -379,6 +380,22 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel('\omega_1');
     ylabel('\omega_2');
     zlabel('\omega_3');
+    
+    subplot(1,2,2); hold on;
+    % Transform omega vector from ECI to RTN
+    W = zeros(length(sim_output.attitude.w1),3);
+    for i = 1:size(sim_output.positions.RTN2ECI,1)
+        W(i,:) = ((squeeze(sim_output.positions.RTN2ECI(i,:,:)).')*([sim_output.attitude.w1(i);sim_output.attitude.w2(i);sim_output.attitude.w3(i)])).';
+    end
+    plot3(W(:,1),W(:,2),W(:,3));
+    view(3);
+    axis equal;
+    
+    title_text = ['RTN Frame Ang Velocity of ', mission_name];
+    title(title_text);
+    xlabel('\omega_R');
+    ylabel('\omega_T');
+    zlabel('\omega_N');
     
     %% Plot 312 Euler angles
     figure('Name',strcat(mission_name, ' 312 Euler Angles')); 
@@ -401,7 +418,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['312 Euler Angles of ', mission_name];
     sgtitle(title_text);
     
-    %% Plot coordiante triads (for first orbit only)
+    %% Plot coordinate triads (for first orbit only)
     if plot_format.plot_triads
         plot_coordtriads(sim_constants, sim_output, plot_format);
     end

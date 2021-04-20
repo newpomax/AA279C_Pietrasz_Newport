@@ -3,8 +3,12 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     mission_name = plot_format.mission_name;
     N = 50; % only 100 triads per orbit, so axes are easy to see
     % Find last time index of first orbit using orbital E switch from 2pi to 0
-    tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1) - 1;
-    df = fix(tend/N); 
+    tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1);
+    if isempty(tend)
+       tend = length(sim_output.time);  % if one full orbit not completed 
+    end
+    df = fix(tend/N);
+    tend = tend - df;
     figure('Name',strcat(mission_name, ' Triads in ECI')); hold on;
     %% Plot Princ, Body Coord Triads in position in ECI
     subplot(1,2,1); hold on;
@@ -18,7 +22,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     R = downsample(sim_output.attitude.princ2inert(1:tend,:,:), df);
     W = zeros(size(R));
     for i = 1:size(R,1)
-       W(i,:,:) = (sim_constants.rotm.')*squeeze(R(i,:,:)) ; % inertial->princ->body
+       W(i,:,:) = squeeze(R(i,:,:))*(sim_constants.rotm.') ; % inertial->princ->body
     end
 
     % Plot inertial, principal, and body coordinates at each point
@@ -50,7 +54,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     R_Earth = sim_constants.R_Earth;
     [xE, yE, zE] = ellipsoid(0, 0, 0, R_Earth, R_Earth, R_Earth, 50);
     surface(xE, yE, zE, 'FaceColor', 'blue', 'EdgeColor', 'none','FaceAlpha',0.1,'DisplayName','Earth'); 
-
+    
     title_text = ['RTN Coordinate Triad of ', mission_name, ...
         ' in ECI'];
     title(title_text);
@@ -143,6 +147,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         % Make z
         zdir = l*squeeze(R(:,:,3)) ;
         if rotc
+            text(X(1),Y(1),Z(1),' \leftarrow Initial Location');
             quiver3(X,Y,Z, xdir(:,1), xdir(:,2), xdir(:,3),'Color', squeeze(c(1,:)), ...
                        'LineWidth',wid,'DisplayName',strcat(name, '_X'),'AutoScale',aut);
             quiver3(X,Y,Z, ydir(:,1), ydir(:,2), ydir(:,3),'Color', squeeze(c(2,:)), ...
