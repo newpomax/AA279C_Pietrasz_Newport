@@ -14,7 +14,6 @@ constants;
 sim_constants.simulation_time = 3.5*3600;
 sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
-sim_constants.use_euler = true; % use 312 Euler angles for attitude rather than quaternions
 
 % Plot formatting
 plot_format.downsample_factor = 100;
@@ -27,8 +26,10 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
-sim_constants.angvel0 = deg2rad([0; 0; 4]); %rad/s, initial angular rate
-sim_constants.simulation_time = orbital_period;
+sim_constants.use_euler = true; % use 312 Euler angles for attitude rather than quaternions
+sim_constants.angvel0 = deg2rad([0; 0; 4]); %rad/s, initial angular rate along principal axis
+sim_constants.simulation_time = orbital_period; % only one orbit for now
+sim_constants.perturbations_on = true; % toggle J2/drag perturbations on/off
 sim('Propagator');
 
 % Extract + plot data
