@@ -1,10 +1,10 @@
 
 function plot_coordtriads(sim_constants, sim_output, plot_format)
     mission_name = plot_format.mission_name;
-    N = 100; % only 100 triads per orbit, so axes are easy to see
-    df = fix(length(sim_output.time)/N); 
+    N = 50; % only 100 triads per orbit, so axes are easy to see
     % Find last time index of first orbit using orbital E switch from 2pi to 0
-    tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1) - df;
+    tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1) - 1;
+    df = fix(tend/N); 
     figure('Name',strcat(mission_name, ' Triads in ECI')); hold on;
     %% Plot Princ, Body Coord Triads in position in ECI
     subplot(1,2,1); hold on;
@@ -73,7 +73,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     axes_name = 'Principal Axes';
     R = sim_output.attitude.princ2inert(1:tend,:,:);
     h = [];
-    colormap winter;
+    g = [0;0;0];
     for i = 1:3
         h = [h; subplot(1,3,i)]; hold on;
         if i == 2
@@ -88,12 +88,21 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         Xx = squeeze(R(:,1,1)); Yx = squeeze(R(:,1,2)); Zx = squeeze(R(:,1,3));
         Xy = squeeze(R(:,2,1)); Yy = squeeze(R(:,2,2)); Zy = squeeze(R(:,2,3));
         Xz = squeeze(R(:,3,1)); Yz = squeeze(R(:,3,2)); Zz = squeeze(R(:,3,3));
-        patch([Xx; nan],[Xy; nan],[Xz; nan],[sim_time; nan],'FaceColor','none','EdgeColor','interp','DisplayName','X Trace');
-        patch([Yx; nan],[Yy; nan],[Yz; nan],[sim_time; nan],'FaceColor','none','EdgeColor','interp','DisplayName','Y Trace');
-        patch([Zx; nan],[Zy; nan],[Zz; nan],[sim_time; nan],'FaceColor','none','EdgeColor','interp','DisplayName','Z Trace');
+        timec = 1+round(255*sim_time/sim_time(end)); % convert to 255 mapping
+        colormap spring;
+        cmapx = colormap; 
+        g(1) = patch([Xx; nan],[Xy; nan],[Xz; nan],reshape([cmapx(timec,:); [0 0 0]], [length(timec)+1,1,3]),'FaceColor','none','EdgeColor','interp','DisplayName','X Trace');
+        colormap summer;
+        cmapy = colormap; 
+        g(2) = patch([Yx; nan],[Yy; nan],[Yz; nan],reshape([cmapy(timec,:); [0 0 0]], [length(timec)+1,1,3]),'FaceColor','none','EdgeColor','interp','DisplayName','Y Trace');
+        colormap autumn;
+        cmapz = colormap;
+        g(3) = patch([Zx; nan],[Zy; nan],[Zz; nan],reshape([cmapz(timec,:); [0 0 0]], [length(timec)+1,1,3]),'FaceColor','none','EdgeColor','interp','DisplayName','Z Trace');
         Rdown = downsample(R, ax_reduction);
-        cmap = colormap;
-        plot_triad(zeros(length(Rdown),1),zeros(length(Rdown),1),zeros(length(Rdown),1),Rdown,1,cmap(1+round(255*time_df3/time_df3(end)),:));
+        timec = 1+round(255*time_df3/time_df3(end)); % convert to 255 mapping
+        cmap = zeros(3, length(timec), 3);
+        cmap(1,:,:) = cmapx(timec,:); cmap(2,:,:) = cmapy(timec,:); cmap(3,:,:) = cmapz(timec,:);
+        plot_triad(zeros(length(Rdown),1),zeros(length(Rdown),1),zeros(length(Rdown),1),Rdown,1,cmap);
         xlabel('1');
         ylabel('2');
         zlabel('3');
@@ -101,16 +110,17 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         pbaspect([1 1 1]);
         view(3);
         grid on;
+        legend(g);
         title_text = [axes_name ' of ', mission_name, ...
             ' w.r.t. ECI'];
         title(title_text);
     end
-      cbh = colorbar(h(1)); 
-      h(1).Position(3:4) = h(2).Position(3:4);
-      set(get(cbh,'label'),'string','Time [sec]');
-     % Reposition to figure's left edge, centered vertically
-      cbh.Position(1) = .95-cbh.Position(3);
-      cbh.Position(2) = 0.5-cbh.Position(4)/2;
+%       cbh = colorbar(h(1)); 
+%       h(1).Position(3:4) = h(2).Position(3:4);
+%       set(get(cbh,'label'),'string','Time [sec]');
+%      % Reposition to figure's left edge, centered vertically
+%       cbh.Position(1) = .95-cbh.Position(3);
+%       cbh.Position(2) = 0.5-cbh.Position(4)/2;
 
     %% plot_triad
     % plots a coordinate trio defined by the rotation matrix R centered at 
@@ -141,13 +151,13 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
             quiver3(X,Y,Z, zdir(:,1), zdir(:,2), zdir(:,3),'Color', squeeze(c(3,:)), ...
                        'LineWidth',wid,'DisplayName',strcat(name, '_Z'),'AutoScale',aut);
         else
-            for j = 1:size(c,1)
-                quiver3(X(j),Y(j),Z(j), xdir(j,1), xdir(j,2), xdir(j,3),'Color', squeeze(c(j,:)), ...
-                            'LineWidth',wid,'AutoScale',aut);
-                quiver3(X(j),Y(j),Z(j), ydir(j,1), ydir(j,2), ydir(j,3),'Color', squeeze(c(j,:)), ...
-                           'LineWidth',wid,'AutoScale',aut);
-                quiver3(X(j),Y(j),Z(j), zdir(j,1), zdir(j,2), zdir(j,3),'Color', squeeze(c(j,:)), ...
-                           'LineWidth',wid,'AutoScale',aut);
+            for j = 1:size(c,2)
+                quiver3(X(j),Y(j),Z(j), xdir(j,1), xdir(j,2), xdir(j,3),'Color', squeeze(c(1,j,:)), ...
+                            'LineWidth',wid,'AutoScale',aut,'DisplayName','');
+                quiver3(X(j),Y(j),Z(j), ydir(j,1), ydir(j,2), ydir(j,3),'Color', squeeze(c(2,j,:)), ...
+                           'LineWidth',wid,'AutoScale',aut,'DisplayName','');
+                quiver3(X(j),Y(j),Z(j), zdir(j,1), zdir(j,2), zdir(j,3),'Color', squeeze(c(3,j,:)), ...
+                           'LineWidth',wid,'AutoScale',aut,'DisplayName','');
             end
         end
         function R = rot(ax, angle)

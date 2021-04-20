@@ -52,9 +52,9 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.attitude.q3 = q.Data(:,3); % unitless
     sim_output.attitude.q4 = q.Data(:,4); % unitless
     
-    sim_output.attitude.phi = e.Data(:,1); % rad
-    sim_output.attitude.theta = e.Data(:,2); % rad
-    sim_output.attitude.psi = e.Data(:,3); % rad
+    sim_output.attitude.phi = rad2deg(e.Data(:,1)); % deg
+    sim_output.attitude.theta = rad2deg(e.Data(:,2)); % deg
+    sim_output.attitude.psi = rad2deg(e.Data(:,3)); % deg
     
     sim_output.attitude.A = permute(A.Data, [3,1,2]); % unitless, make time the first index
     sim_output.attitude.princ2inert = permute(A.Data, [3,2,1]); % inverse of A, rotates principal to inertial
