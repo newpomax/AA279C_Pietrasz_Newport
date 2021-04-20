@@ -110,17 +110,16 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         pbaspect([1 1 1]);
         view(3);
         grid on;
-        legend(g);
+        legend(g,'Location','northeast');
         title_text = [axes_name ' of ', mission_name, ...
             ' w.r.t. ECI'];
         title(title_text);
     end
-%       cbh = colorbar(h(1)); 
-%       h(1).Position(3:4) = h(2).Position(3:4);
-%       set(get(cbh,'label'),'string','Time [sec]');
-%      % Reposition to figure's left edge, centered vertically
-%       cbh.Position(1) = .95-cbh.Position(3);
-%       cbh.Position(2) = 0.5-cbh.Position(4)/2;
+      cbh = colorbar(h(1),'YTick',[0 1],'YTickLabel',[time_df3(1) time_df3(end)]); 
+      h(1).Position(3:4) = h(2).Position(3:4);
+      set(get(cbh,'label'),'string','Time [sec]');
+      cbh.Position(1) = .95-cbh.Position(3);
+      cbh.Position(2) = 0.5-cbh.Position(4)/2;
 
     %% plot_triad
     % plots a coordinate trio defined by the rotation matrix R centered at 
