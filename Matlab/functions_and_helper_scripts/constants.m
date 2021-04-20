@@ -52,5 +52,5 @@ sim_constants.simulation_time = .067*24*3600; % day -> hr -> s
 sim_constants.time_step = 0.5; % s
 sim_constants.tolerance = 10^-8;
 sim_constants.use_euler = false; % use quaternions
-sim_constants.perturbations_on = true; % add J2 and drag perturbations
+sim_constants.perturbations_on = true; % add J2 and drag perturbations (true = yes)
 

@@ -328,7 +328,6 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L1, df), 2);
-    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2]));   
 
     title_text = ['L_1 of ', mission_name, ' in inertial axes'];
     title(title_text);
@@ -340,7 +339,6 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L2, df), 2);
-    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2])); 
 
     title_text = ['L_2 of ', mission_name, ' in inertial axes'];
     title(title_text);
@@ -352,7 +350,6 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L3, df), 2);
-    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2])); 
 
     title_text = ['L_3 of ', mission_name, ' in inertial axes'];
     title(title_text);
