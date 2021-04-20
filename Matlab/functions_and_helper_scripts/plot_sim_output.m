@@ -401,17 +401,17 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     figure('Name',strcat(mission_name, ' 312 Euler Angles')); 
     hold on;
     subplot(1,3,1); hold on;
-    scatter(downsampled_time,  rad2deg(downsample(sim_output.attitude.phi, df)),2);
+    plot(sim_output.time,  sim_output.attitude.phi);
     ylabel('\phi [deg]');
     xlabel(time_label);
     
     subplot(1,3,2); hold on;
-    scatter(downsampled_time,  downsample(sim_output.attitude.theta, df),2);
+    plot(sim_output.time,  sim_output.attitude.theta);
     ylabel('\theta [deg]');
     xlabel(time_label);
     
     subplot(1,3,3); hold on;
-    scatter(downsampled_time,  downsample(sim_output.attitude.psi, df),2);
+    plot(sim_output.time,  sim_output.attitude.psi);
     ylabel('\psi [deg]');
     xlabel(time_label);
     

@@ -27,7 +27,7 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
-% sim_constants.angvel0 = deg2rad([0; 0; 4]); %rad/s, initial angular rate
+sim_constants.angvel0 = deg2rad([0; 0; 4]); %rad/s, initial angular rate
 sim_constants.simulation_time = orbital_period;
 sim('Propagator');
 
