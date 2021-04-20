@@ -360,7 +360,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     ylabel('L_3 [kg m^2 /s]');
     
     %% Plot Herpohlode
-    figure('Name',strcat(mission_name, ' Herpohlode'));
+    figure('Name',strcat(mission_name, ' Herpolhode'));
     hold on; 
     
     plot3(sim_output.attitude.w1,sim_output.attitude.w2,sim_output.attitude.w3)
@@ -370,7 +370,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     finish = [sim_output.attitude.L1(1) sim_output.attitude.L2(1) sim_output.attitude.L3(1)]/L;
     quiver3(start(1),start(2),start(3),finish(1),finish(2),finish(3),'LineWidth',2);
 
-    legend('Herpohlode','Ang. Momentum');
+    legend('Herpolhode','Ang. Momentum');
     view(3);
     axis equal;
     
@@ -379,6 +379,28 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel('\omega_1');
     ylabel('\omega_2');
     zlabel('\omega_3');
+    
+    %% Plot 312 Euler angles
+    figure('Name',strcat(mission_name, ' 312 Euler Angles')); 
+    hold on;
+    subplot(1,3,1); hold on;
+    scatter(downsampled_time,  rad2deg(downsample(sim_output.attitude.phi, df)), 2);
+    ylabel('\phi [deg]');
+    xlabel(time_label);
+    
+    subplot(1,3,2); hold on;
+%     scatter(downsampled_time,  rad2deg(downsample(sim_output.attitude.theta, df)), 2);
+    plot(sim_output.time,  sim_output.attitude.theta);
+    ylabel('\theta [deg]');
+    xlabel(time_label);
+    
+    subplot(1,3,3); hold on;
+    scatter(downsampled_time,  rad2deg(downsample(sim_output.attitude.psi, df)), 2);
+    ylabel('\psi [deg]');
+    xlabel(time_label);
+    
+    title_text = ['312 Euler Angles of ', mission_name];
+    sgtitle(title_text);
     
     %% Plot coordiante triads (for first orbit only)
     if plot_format.plot_triads

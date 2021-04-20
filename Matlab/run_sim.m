@@ -14,6 +14,7 @@ constants;
 sim_constants.simulation_time = 3.5*3600;
 sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
+sim_constants.use_euler = false; % use 312 Euler angles for attitude rather than quaternions
 
 % Plot formatting
 plot_format.downsample_factor = 100;
@@ -31,7 +32,7 @@ sim('Propagator');
 
 % Extract + plot data
 sim_output = extract_sim_output(sim_constants, plot_format, OE, dOE_dt, ...
-    w, q, A, ECI_positions, ECEF_positions, RTN2ECI, geod_positions);
+    w, q, e, A, ECI_positions, ECEF_positions, RTN2ECI, geod_positions);
 plot_sim_output(sim_constants, sim_output, plot_format);
 
 %% beep beep

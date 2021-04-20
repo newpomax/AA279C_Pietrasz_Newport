@@ -17,14 +17,11 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     % Make coordinate matrices (where columns are directions of vectors)
     R = downsample(sim_output.attitude.princ2inert(1:tend,:,:), df);
     W = zeros(size(R));
-    Q = zeros(size(R));
     for i = 1:size(R,1)
        W(i,:,:) = (sim_constants.rotm.')*squeeze(R(i,:,:)) ; % inertial->princ->body
-       Q(i,:,:) = eye(3); % inertial -> inertial
     end
 
     % Plot inertial, principal, and body coordinates at each point
-    plot_triad(X,Y,Z,Q,l,[1 0 0],'Inertial');
     plot_triad(X,Y,Z,R,l,[0 1 0],'Principal');
     plot_triad(X,Y,Z,W,l,[0 0 1],'Body');
 
@@ -48,7 +45,6 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     %% Plot RTN Coord Triad in position in ECI
     subplot(1,2,2); hold on;
     RTN = downsample(sim_output.positions.RTN2ECI(1:tend,:,:), df);
-    plot_triad(X,Y,Z,Q,l,[1 0 0],'Inertial');
     plot_triad(X,Y,Z,RTN,l,[1 165/255 0],'RTN');
     % Plot Earth for reference, but transparent
     R_Earth = sim_constants.R_Earth;
