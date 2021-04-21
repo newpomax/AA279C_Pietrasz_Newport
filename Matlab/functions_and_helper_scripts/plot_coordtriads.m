@@ -3,8 +3,15 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     mission_name = plot_format.mission_name;
     N = 50; % only 100 triads per orbit, so axes are easy to see
     % Find last time index of first orbit using orbital E switch from 2pi to 0
-    tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1) - 1;
-    df = fix(tend/N); 
+    tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1);
+    if isempty(tend)
+       tend = length(sim_output.time);  % if one full orbit not completed 
+       N = fix(N*sim_output.time(tend)*plot_format.seconds_to_increment/(2*pi/sim_constants.n0)); % downscale number to fraction of orbit completed
+       df = fix(tend/N);
+    else
+       df = fix(tend/N);
+    end
+    tend = tend - df;
     figure('Name',strcat(mission_name, ' Triads in ECI')); hold on;
     %% Plot Princ, Body Coord Triads in position in ECI
     subplot(1,2,1); hold on;
@@ -18,7 +25,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     R = downsample(sim_output.attitude.princ2inert(1:tend,:,:), df);
     W = zeros(size(R));
     for i = 1:size(R,1)
-       W(i,:,:) = (sim_constants.rotm.')*squeeze(R(i,:,:)) ; % inertial->princ->body
+       W(i,:,:) = squeeze(R(i,:,:))*(sim_constants.rotm.') ; % inertial->princ->body
     end
 
     % Plot inertial, principal, and body coordinates at each point
@@ -50,7 +57,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     R_Earth = sim_constants.R_Earth;
     [xE, yE, zE] = ellipsoid(0, 0, 0, R_Earth, R_Earth, R_Earth, 50);
     surface(xE, yE, zE, 'FaceColor', 'blue', 'EdgeColor', 'none','FaceAlpha',0.1,'DisplayName','Earth'); 
-
+    
     title_text = ['RTN Coordinate Triad of ', mission_name, ...
         ' in ECI'];
     title(title_text);
@@ -110,17 +117,16 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         pbaspect([1 1 1]);
         view(3);
         grid on;
-        legend(g);
+        legend(g,'Location','northeast');
         title_text = [axes_name ' of ', mission_name, ...
             ' w.r.t. ECI'];
         title(title_text);
     end
-%       cbh = colorbar(h(1)); 
-%       h(1).Position(3:4) = h(2).Position(3:4);
-%       set(get(cbh,'label'),'string','Time [sec]');
-%      % Reposition to figure's left edge, centered vertically
-%       cbh.Position(1) = .95-cbh.Position(3);
-%       cbh.Position(2) = 0.5-cbh.Position(4)/2;
+      cbh = colorbar(h(1),'YTick',[0 1],'YTickLabel',[time_df3(1) time_df3(end)]); 
+      h(1).Position(3:4) = h(2).Position(3:4);
+      set(get(cbh,'label'),'string','Time [sec]');
+      cbh.Position(1) = .95-cbh.Position(3);
+      cbh.Position(2) = 0.5-cbh.Position(4)/2;
 
     %% plot_triad
     % plots a coordinate trio defined by the rotation matrix R centered at 
@@ -144,6 +150,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         % Make z
         zdir = l*squeeze(R(:,:,3)) ;
         if rotc
+            text(X(1),Y(1),Z(1),' \leftarrow Initial Location');
             quiver3(X,Y,Z, xdir(:,1), xdir(:,2), xdir(:,3),'Color', squeeze(c(1,:)), ...
                        'LineWidth',wid,'DisplayName',strcat(name, '_X'),'AutoScale',aut);
             quiver3(X,Y,Z, ydir(:,1), ydir(:,2), ydir(:,3),'Color', squeeze(c(2,:)), ...

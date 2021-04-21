@@ -328,7 +328,6 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L1, df), 2);
-    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2]));   
 
     title_text = ['L_1 of ', mission_name, ' in inertial axes'];
     title(title_text);
@@ -340,7 +339,6 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L2, df), 2);
-    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2])); 
 
     title_text = ['L_2 of ', mission_name, ' in inertial axes'];
     title(title_text);
@@ -352,15 +350,15 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     hold on;
 
     scatter(downsampled_time, downsample(sim_output.attitude.L3, df), 2);
-    [maxy,maxi] = max(abs(ylim)); yl = ylim; ylim(sort(sign(yl(maxi))*maxy*[0.8 1.2])); 
 
     title_text = ['L_3 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
     ylabel('L_3 [kg m^2 /s]');
     
-    %% Plot Herpohlode
-    figure('Name',strcat(mission_name, ' Herpolhode'));
+    %% Plot Herpohlode & RTN Frame Ang Vel
+    figure('Name',strcat(mission_name, ' Herpolhode & RTN'));
+    subplot(3,2,[1 3 5]);
     hold on; 
     
     plot3(sim_output.attitude.w1,sim_output.attitude.w2,sim_output.attitude.w3)
@@ -369,39 +367,66 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     start = mean([sim_output.attitude.w1 sim_output.attitude.w2 sim_output.attitude.w3]);
     finish = [sim_output.attitude.L1(1) sim_output.attitude.L2(1) sim_output.attitude.L3(1)]/L;
     quiver3(start(1),start(2),start(3),finish(1),finish(2),finish(3),'LineWidth',2);
-
-    legend('Herpolhode','Ang. Momentum');
-    view(3);
-    axis equal;
-    
+  
     title_text = ['Herpohlode of ', mission_name];
     title(title_text);
     xlabel('\omega_1');
     ylabel('\omega_2');
     zlabel('\omega_3');
     
+    legend('Herpolhode','Ang. Momentum');
+    view(3);
+    axis equal;
+    pbaspect([1 1 1]);
+    
+    % Transform omega vector from ECI to RTN
+    W = zeros(length(sim_output.attitude.w1),3);
+    for i = 1:size(sim_output.positions.RTN2ECI,1)
+        W(i,:) = ((squeeze(sim_output.positions.RTN2ECI(i,:,:)).')*([sim_output.attitude.w1(i);sim_output.attitude.w2(i);sim_output.attitude.w3(i)])).';
+    end
+    subplot(3,2,2); hold on;
+    scatter(downsampled_time, downsample(W(:,1),df), 2);
+    title_text = ['\omega_R of ', mission_name];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('\omega_R [rad/s]');
+    
+    subplot(3,2,4); hold on;
+    scatter(downsampled_time, downsample(W(:,2),df), 2);
+    title_text = ['\omega_T of ', mission_name];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('\omega_T [rad/s]');
+    
+    subplot(3,2,6); hold on;
+    scatter(downsampled_time, downsample(W(:,3),df), 2);
+    title_text = ['\omega_N of ', mission_name];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('\omega_N [rad/s]');
+
     %% Plot 312 Euler angles
     figure('Name',strcat(mission_name, ' 312 Euler Angles')); 
     hold on;
     subplot(1,3,1); hold on;
-    plot(downsampled_time,  rad2deg(downsample(sim_output.attitude.phi, df)));
+    plot(sim_output.time,  sim_output.attitude.phi);
     ylabel('\phi [deg]');
     xlabel(time_label);
     
     subplot(1,3,2); hold on;
-    plot(downsampled_time,  downsample(sim_output.attitude.theta, df));
+    plot(sim_output.time,  sim_output.attitude.theta);
     ylabel('\theta [deg]');
     xlabel(time_label);
     
     subplot(1,3,3); hold on;
-    plot(downsampled_time,  downsample(sim_output.attitude.psi, df));
+    plot(sim_output.time,  sim_output.attitude.psi);
     ylabel('\psi [deg]');
     xlabel(time_label);
     
     title_text = ['312 Euler Angles of ', mission_name];
     sgtitle(title_text);
     
-    %% Plot coordiante triads (for first orbit only)
+    %% Plot coordinate triads (for first orbit only)
     if plot_format.plot_triads
         plot_coordtriads(sim_constants, sim_output, plot_format);
     end
