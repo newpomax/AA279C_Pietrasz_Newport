@@ -6,8 +6,11 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     tend = find( diff(sign(sim_output.OE.E - pi)) == -2 , 1);
     if isempty(tend)
        tend = length(sim_output.time);  % if one full orbit not completed 
+       N = fix(N*sim_output.time(tend)*plot_format.seconds_to_increment/(2*pi/sim_constants.n0)); % downscale number to fraction of orbit completed
+       df = fix(tend/N);
+    else
+       df = fix(tend/N);
     end
-    df = fix(tend/N);
     tend = tend - df;
     figure('Name',strcat(mission_name, ' Triads in ECI')); hold on;
     %% Plot Princ, Body Coord Triads in position in ECI
