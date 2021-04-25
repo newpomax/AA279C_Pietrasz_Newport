@@ -22,6 +22,12 @@ sim_constants.I = [3.10553 -0.00011 -0.00003;
 % rotm: rotation matrix from principle axes to body
 [sim_constants.I_princ, sim_constants.rotm] = rot_body2princ(sim_constants.I); 
 
+% Momentum wheel (from data sheet)
+sim_constants.I_r = 0.8*0.226*(0.032^2); % kg*m^2
+sim_constants.w_r0 = 1; % rad/s
+sim_constants.w_rmax = 0.18/sim_constants.I_r; % rad/s
+sim_constants.r_rotor = (sim_constants.rotm.')*[0;1;0]; % along body Y axis
+
 % Orbital elements (from
 % https://secure.planetary.org/site/SPageNavigator/mission_control.html)
 % Day of year	Date,       Mean Motion a           h           e

@@ -26,14 +26,6 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
-% sim_constants.use_euler = true; % use 312 Euler angles for attitude rather than quaternions
-% sim_constants.angvel0 = deg2rad([6; 0; 0]); %rad/s, initial angular rate along principal axis
-% sim_constants.simulation_time = orbital_period; % only one orbit for now
-% sim_constants.perturbations_on = false; % toggle J2/drag perturbations on/off
-% sim_constants.q0 = [0; sqrt(2)*0.5; 0; 0.5*sqrt(2)];
-% sim_constants.q0 = A2q(OE2RTN(sim_constants.a0,sim_constants.e0,sim_constants.i0,...
-%                                  sim_constants.RAAN0, sim_constants.w0, sim_constants.M0, ...
-%                                  sim_constants.mu_Earth).');
 sim('Propagator');
 
 % Extract + plot data
