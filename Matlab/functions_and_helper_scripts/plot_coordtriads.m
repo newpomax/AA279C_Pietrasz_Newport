@@ -89,7 +89,7 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
             end
             axes_name = 'Body Axes';
         elseif i == 3
-            R = sim_output.positions.RTN2ECI(1:tend,:,:);
+            R = sim_output.positions.RTN2ECI(1:tend,:,:); % inertial -> RTN
             axes_name = 'RTN Axes';          
         end
         Xx = squeeze(R(:,1,1)); Yx = squeeze(R(:,1,2)); Zx = squeeze(R(:,1,3));
