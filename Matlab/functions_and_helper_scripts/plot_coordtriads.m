@@ -72,7 +72,12 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
     
     %% Plot trace of coordinate tips for principal, body, and RTN axes in inertial frame
     figure('Name',strcat(mission_name, ' Triads in Time')); hold on;
-    tend = fix(3*tend/100); % only plot a few percent of the orbital period to keep plot uncluttered
+    if tend == (length(sim_output.time) - df)
+        % if less than a full orbit, plot half of the run
+        tend = fix(tend);
+    else
+        tend = fix(0.03*tend); % only plot a few percent of the first orbital period to keep plot uncluttered
+    end
     sim_time = sim_output.time(1:tend)*plot_format.seconds_to_increment; 
     Nax = 2; % number of actual axes to plot (unit length arrows along XYZ)
     ax_reduction = fix(length(sim_time)/(Nax-1) - 1); % lower sampling for axes plotting

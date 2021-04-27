@@ -11,12 +11,12 @@ constants;
 
 % Simulation settings
 % Or set simulation_time in thrust_input_file.
-sim_constants.simulation_time = 3.5*3600;
-sim_constants.time_step = 0.1; % s
+sim_constants.simulation_time = 2*3600;
+sim_constants.time_step = 0.05; % s
 sim_constants.tolerance = 10^-8;
 
 % Plot formatting
-plot_format.downsample_factor = 5;
+plot_format.downsample_factor = 2;
 plot_format.mission_name = 'LS2';
 plot_format.plot_orbit_visuals = true;
 plot_format.dock_plots = true;
@@ -26,10 +26,9 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Select test
-run_test = 'Int_Stability';
+run_test = 'Other_Stability';
 
-I = sim_constants.I_princ; w0 = sim_constants.angvel0;
-sim_constants.w_r0 = 0.5; % rad/s, very slow spin for testing
+sim_constants.w_r0 = 1; % rad/s, very slow spin for testing
 switch run_test
     case 'Eq_X'
         sim_constants.r_rotor = [1; 0; 0];
@@ -49,23 +48,25 @@ switch run_test
                 % initially aligned with RTN
     case 'Stab_X'
         sim_constants.r_rotor = [1; 0; 0];
-        sim_constants.angvel0 = deg2rad([7; 0.1; 0.1]);
+        sim_constants.angvel0 = deg2rad([7; 0.01; 0.01]);
     case 'Stab_Y'
         sim_constants.r_rotor = [0; 1; 0];
-        sim_constants.angvel0 = deg2rad([0.1; 7; 0.1]);
+        sim_constants.angvel0 = deg2rad([0.01; 7; 0.01]);
     case 'Stab_Z'
         sim_constants.r_rotor = [0; 0; 1];
         sim_constants.angvel0 = deg2rad([0.1; 0.1; 7]);
     case 'Int_Stability'
         sim_constants.r_rotor = [0; 1; 0];
-        sim_constants.angvel0 = deg2rad([0.1;7;0.1]); %rad/s, along intermediate axis
-        sim_constants.w_r0 = sign(w0(2))*2*max(abs((I(3)-I(2))*w0(2)) , 0)/sim_constants.I_r; % ensure stability
-        sim_constants.w_rmax = 1E6; % allow a very high spin, despite limitations of momentum wheel
+        sim_constants.angvel0 = deg2rad([0.01;7;0.01]); %rad/s, along intermediate axis
+        I = sim_constants.I_princ; w0 = sim_constants.angvel0;
+        sim_constants.w_r0 = 10*(I(3)-I(2))*w0(2)/sim_constants.I_r; % ensure stability
+        sim_constants.w_rmax = abs(sim_constants.w_r0);
     case 'Other_Stability'
-        sim_constants.r_rotor = [0; 1; 0];
-        sim_constants.angvel0 = deg2rad([0.1;7;0.1]); %rad/s, along intermediate axis
-        sim_constants.w_r0 = sign(w0(2))*2*max(abs((I(3)-I(2))*w0(2)) , 0)/sim_constants.I_r; % ensure stability
-        sim_constants.w_rmax = 1E6;
+        sim_constants.r_rotor = [0; 0; 1];
+        sim_constants.angvel0 = deg2rad([0.01;0;0.01]); %rad/s, along z axis w/o spin
+        I = sim_constants.I_princ; w0 = sim_constants.angvel0;
+        sim_constants.w_r0 = 100; % ensure stability ( anything other than 0 is sufficient )
+        sim_constants.w_rmax = abs(sim_constants.w_r0);
 end
 
 
