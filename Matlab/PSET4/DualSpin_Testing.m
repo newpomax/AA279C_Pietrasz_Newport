@@ -63,7 +63,7 @@ switch run_test
         sim_constants.w_rmax = abs(sim_constants.w_r0);
     case 'Other_Stability'
         sim_constants.r_rotor = [0; 0; 1];
-        sim_constants.angvel0 = deg2rad([0.01;0;0.01]); %rad/s, along z axis w/o spin
+        sim_constants.angvel0 = deg2rad([0.01;0.01;0.01]); %rad/s, along z axis w/o spin
         I = sim_constants.I_princ; w0 = sim_constants.angvel0;
         sim_constants.w_r0 = 100; % ensure stability ( anything other than 0 is sufficient )
         sim_constants.w_rmax = abs(sim_constants.w_r0);
