@@ -11,7 +11,7 @@ constants;
 
 % Simulation settings
 % Or set simulation_time in thrust_input_file.
-sim_constants.simulation_time = 100;
+sim_constants.simulation_time = 300;
 sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
 
@@ -22,7 +22,7 @@ plot_format.plot_orbit_visuals = true;
 plot_format.dock_plots = true;
 plot_format.plot_triads = true;
 % set 's', 'min', 'hours', 'days', or 'years'
-plot_format.time_increments = 'hours';
+plot_format.time_increments = 's';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
@@ -47,14 +47,29 @@ time_df = downsample(sim_output_quat.time, plot_format.downsample_factor);
 for i = 1:4
    subplot(2,4,i); hold on;
    title(['q_' num2str(i)]);
-   xlabel('Time, hrs'); ylabel(['q_' num2str(i)]);
+   xlabel('Time, sec'); ylabel(['q_' num2str(i)]);
    plot(time_df, downsample(getfield(sim_output_quat.attitude, ['q' num2str(i)]), plot_format.downsample_factor),'-s','MarkerSize',5,'DisplayName','Quaternion');
-   plot(time_df, downsample(getfield(sim_output_eul.attitude, ['q' num2str(i)]), plot_format.downsample_factor),'DisplayName','312 Euler');
+   plot(time_df, downsample(getfield(sim_output_eul.attitude, ['q' num2str(i)]), plot_format.downsample_factor),'LineWidth',2,'DisplayName','312 Euler');
    legend;
    subplot(2,4,i+4); hold on;
    title(['Error in q_' num2str(i)]);
-   xlabel('Time, hrs'); ylabel(['Error in q_' num2str(i)]);
-   q_err = getfield(sim_output_quat.attitude, ['q' num2str(i)])-getfield(sim_output_eul.attitude, ['q' num2str(i)]);
+   xlabel('Time, sec'); ylabel('Error');
+   q_err = abs(getfield(sim_output_quat.attitude, ['q' num2str(i)])-getfield(sim_output_eul.attitude, ['q' num2str(i)]));
    plot(time_df, downsample(q_err, plot_format.downsample_factor));
 end
-sgtitle('Quaternion Comparison for Quaternion Param. (top) vs 312 Euler Param. (bottom)');
+names = ["phi", "theta", "psi"];
+figure('Name','312 Euler'); hold on;
+for i = 1:3
+   subplot(2,4,i); hold on;
+   title(strcat('\',names(i)));
+   xlabel('Time, sec'); ylabel(strcat("\", names(i), ", deg"));
+   plot(time_df, downsample(getfield(sim_output_quat.attitude, names(i)), plot_format.downsample_factor),'-s','MarkerSize',5,'DisplayName','Quaternion');
+   plot(time_df, downsample(getfield(sim_output_eul.attitude, names(i)), plot_format.downsample_factor),'LineWidth',2,'DisplayName','312 Euler');
+   legend;
+   subplot(2,4,i+4); hold on;
+   title(strcat("\", names(i), " Error"));
+   xlabel('Time, sec'); ylabel('Error');
+   e_err = abs(getfield(sim_output_quat.attitude, names(i))-getfield(sim_output_eul.attitude, names(i)));
+   plot(time_df, downsample(e_err, plot_format.downsample_factor));
+end
+sgtitle('Euler Angle Comparison for Quaternion Kinematics vs 312 Euler Kinematics');
