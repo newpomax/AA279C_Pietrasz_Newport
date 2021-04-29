@@ -70,6 +70,7 @@ switch run_test
 end
 
 
+
 %% Run + process sim
 sim('Propagator');
 
