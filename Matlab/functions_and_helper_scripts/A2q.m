@@ -1,4 +1,4 @@
-%% A2q - Calculate quaternion from cosine matrix via Stanley's method
+%% A2q - Calculate quaternion (scalar last) from cosine matrix via Stanley's method
 function q = A2q(A)
     trA = trace(A);
     beta4 = 0.25*(1+trA);

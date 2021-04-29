@@ -1,5 +1,6 @@
 function sim_output = extract_sim_output(sim_constants, plot_format, ...
-    OE, dOE_dt, w, w_r, q, e, A, ECI_positions, ECEF_positions, RTN2ECI, geod_positions)
+    OE, dOE_dt, w, w_r, q, e, A, M_perturbations, ...
+    ECI_positions, ECEF_positions, RTN2ECI, geod_positions)
     %% Post-process data output from simulation for plotting and calcs
 
     sim_output = struct;
@@ -38,8 +39,15 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.dOE.E = dOE_dt.Data(:,6); % deg s-1
     
     %% For momentum wheel
+    
     sim_output.attitude.w_r = w_r.Data; % rad/s, angular velocity of momentum wheel
     sim_output.attitude.L_r = sim_constants.I_r*sim_output.attitude.w_r; % Nm*s, angular momentum of momentum wheel
+    
+    %% For environmental perturbations
+    
+    sim_output.ext_torques.Mx = M_perturbations.Data(:,1); % rad s-1, principal axes
+    sim_output.ext_torques.My = M_perturbations.Data(:,2); % rad s-1, principal axes
+    sim_output.ext_torques.Mz = M_perturbations.Data(:,3); % rad s-1, principal axes
     
     %% For attitude plots in principal axes
     
@@ -67,11 +75,13 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.attitude.w1 = zeros(size(sim_output.attitude.wx));
     sim_output.attitude.w2 = zeros(size(sim_output.attitude.wx));
     sim_output.attitude.w3 = zeros(size(sim_output.attitude.wx));
+    
     sim_output.attitude.L1 = zeros(size(sim_output.attitude.Lx));
     sim_output.attitude.L2 = zeros(size(sim_output.attitude.Lx));
     sim_output.attitude.L3 = zeros(size(sim_output.attitude.Lx));
     
     W = [sim_output.attitude.wx, sim_output.attitude.wy, sim_output.attitude.wz];
+    
     for i = 1:size(sim_output.attitude.A,1)
        R = squeeze(sim_output.attitude.princ2inert(i,:,:)); 
        Winertial = (R*(W(i,:).')).'; % convert to inertial axes

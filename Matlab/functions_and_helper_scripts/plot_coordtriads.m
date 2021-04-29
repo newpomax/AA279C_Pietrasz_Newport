@@ -76,7 +76,9 @@ function plot_coordtriads(sim_constants, sim_output, plot_format)
         % if less than a full orbit, plot half of the run
         tend = fix(tend);
     else
-        tend = fix(0.03*tend); % only plot a few percent of the first orbital period to keep plot uncluttered
+        % only plot a few percent of the first orbital period to keep plot uncluttered
+        fraction_of_orbit_to_plot = 0.03;
+        tend = fix(fraction_of_orbit_to_plot*tend); 
     end
     sim_time = sim_output.time(1:tend)*plot_format.seconds_to_increment; 
     Nax = 2; % number of actual axes to plot (unit length arrows along XYZ)

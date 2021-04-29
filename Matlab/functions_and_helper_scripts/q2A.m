@@ -1,4 +1,4 @@
-%% q2A - Calculate cosine matrix from q
+%% q2A - Calculate cosine matrix from q (scalar last)
 function A = q2A(q)
     qvec = reshape(q(1:3),3,1);
     skewq = [0 -qvec(3) qvec(2); qvec(3) 0 -qvec(1) ; -qvec(2) qvec(1) 0];

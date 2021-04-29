@@ -53,10 +53,10 @@ orbital_velocity = sim_constants.n0*sim_constants.a0; % km s-1
 orbital_period = 2*pi/sim_constants.n0; % s
 
 % Default sim parameters in case they're not set elsewhere (should be set
-% in run_sim or the thrust_input_file)
+% in run_sim or whichever script calls the sim)
 sim_constants.simulation_time = .067*24*3600; % day -> hr -> s
 sim_constants.time_step = 0.5; % s
 sim_constants.tolerance = 10^-8;
 sim_constants.use_euler = false; % use quaternions
-sim_constants.perturbations_on = true; % add J2 and drag perturbations (true = yes)
-
+sim_constants.orbital_perturbations_on = true; % add J2 and drag perturbations (true = yes)
+sim_constants.attitude_perturbations_on = true; % add gravity gradient perturbations (true = yes)
