@@ -9,6 +9,7 @@ sim_constants.G = 6.674 * 10^-20;     % km3 kg-1 s-2
 sim_constants.mu_Earth = sim_constants.G*sim_constants.M_Earth; % km3 s-2
 sim_constants.J2 = 0.00108263;        % SMAD p. 143
 sim_constants.dRAAN_dt_sun_synch = 360/(365.24*24*3600); % deg s-1
+sim_constants.SRP = 9.08e-6 ;         % Pa, SRP at 1AU
 
 % Satellite data
 sim_constants.mass_sat = 4.93; % kg
@@ -21,6 +22,14 @@ sim_constants.I = [3.10553 -0.00011 -0.00003;
 % I_princ: 3x1 vector of in-order ascending principle moments of inertia, kg*m^2
 % rotm: rotation matrix from principle axes to body
 [sim_constants.I_princ, sim_constants.rotm] = rot_body2princ(sim_constants.I); 
+sim_constants.Cdrag = 1.17; % drag coefficient
+sim_constants.Cspec = 0.5; % spectral reflection coefficient for SRP
+sim_constants.Cdiff = 0.5; % diffusive reflection coefficient for SRP
+
+% Satellite surfaces
+[C, N, sim_constants.surf_areas] = get_surfacedata(); % get surface information from CSV (surface area in m^2)
+sim_constants.surf_centroids = C*sim_constants.rotm; % centroid locations in principal axes, in m
+sim_constants.surf_norms = N*sim_constants.rotm; % surface normals in principal axes
 
 % Momentum wheel (from data sheet)
 sim_constants.I_r = 0.8*0.226*(0.032^2); % kg*m^2, moment of inertia of wheel
