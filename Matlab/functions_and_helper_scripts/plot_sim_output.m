@@ -30,66 +30,72 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     subplot(2,3,1);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.wx, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.wx, df));
 
     title_text = ['w_x of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('w_x [rad/s]');
     
     % w_y
     subplot(2,3,2);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.wy, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.wy, df));
 
     title_text = ['w_y of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('w_y [rad/s]');
     
     % w_z
     subplot(2,3,3);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.wz, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.wz, df));
 
     title_text = ['w_z of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('w_z [rad/s]');
     
     % L_x
     subplot(2,3,4);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.Lx, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.Lx, df));
 
     title_text = ['L_x of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('L_x [kg m^2 /s]');
     
     % L_y
     subplot(2,3,5);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.wy, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.wy, df));
 
     title_text = ['L_y of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('L_y [kg m^2 /s]');
     
     % L_z
     subplot(2,3,6);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.wz, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.wz, df));
 
     title_text = ['L_z of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('L_z [kg m^2 /s]');
     
     %% Plot s/c Torques in Principal Axes
@@ -98,33 +104,36 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     subplot(1,3,1);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.ext_torques.Mx, df), 2);
+    plot(downsampled_time, downsample(sim_output.ext_torques.Mx, df));
 
     title_text = ['M_x of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('w_x [rad/s]');
     
     % w_y
     subplot(1,3,2);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.ext_torques.My, df), 2);
+    plot(downsampled_time, downsample(sim_output.ext_torques.My, df));
 
     title_text = ['w_y of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('w_y [rad/s]');
     
     % w_z
     subplot(1,3,3);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.ext_torques.Mz, df), 2);
+    plot(downsampled_time, downsample(sim_output.ext_torques.Mz, df));
 
     title_text = ['w_z of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('w_z [rad/s]');
     
     % Maybe control torques here?
@@ -135,66 +144,72 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     subplot(2,3,1);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.w1, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.w1, df));
 
     title_text = ['\omega_1 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('\omega_1 [rad/s]');
     
     % w_2
     subplot(2,3,2);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.w2, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.w2, df));
 
     title_text = ['\omega_2 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('\omega_2 [rad/s]');
     
     % w_3
     subplot(2,3,3);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.w3, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.w3, df));
 
     title_text = ['\omega_3 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('\omega_3 [rad/s]');
     
     % L_1
     subplot(2,3,4);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.L1, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.L1, df));
 
     title_text = ['L_1 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('L_1 [kg m^2 /s]');
     
     % L_2
     subplot(2,3,5);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.L2, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.L2, df));
 
     title_text = ['L_2 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('L_2 [kg m^2 /s]');
     
     % L_3
     subplot(2,3,6);
     hold on;
 
-    scatter(downsampled_time, downsample(sim_output.attitude.L3, df), 2);
+    plot(downsampled_time, downsample(sim_output.attitude.L3, df));
 
     title_text = ['L_3 of ', mission_name, ' in inertial axes'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('L_3 [kg m^2 /s]');
     
     %% Plot Herpolhode & RTN Frame Ang Vel
@@ -212,6 +227,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['Herpohlode of ', mission_name];
     title(title_text);
     xlabel('\omega_1');
+    ytickformat('%.3g');
     ylabel('\omega_2');
     zlabel('\omega_3');
     
@@ -230,6 +246,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['\omega_R of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('\omega_R [rad/s]');
     
     subplot(3,2,4); hold on;
@@ -237,6 +254,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['\omega_T of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('\omega_T [rad/s]');
     
     subplot(3,2,6); hold on;
@@ -244,6 +262,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['\omega_N of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('\omega_N [rad/s]');
     
     %% Plot coordinate triads (for first orbit only)
@@ -252,20 +271,40 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     end
 
     %% Plot 312 Euler angles
+    
+    % Force phi between -180 and 180:
+    phi = sim_output.attitude.phi;
+    idx = phi > 180;
+    phi(idx) = phi(idx) - 360;
+    
     figure('Name',strcat(mission_name, ' 312 Euler Angles')); 
     hold on;
     subplot(1,3,1); hold on;
-    plot(sim_output.time,  sim_output.attitude.phi);
+    plot(sim_output.time, phi);
+    ytickformat('%.3g');
     ylabel('\phi [deg]');
     xlabel(time_label);
     
+    % Force theta between -90 and 90:
+    % Assumes no values btwn 90 and 270 (which there shouldn't be).
+    theta = sim_output.attitude.theta;
+    idx = theta > 270;
+    theta(idx) = theta(idx) - 360;
+    
     subplot(1,3,2); hold on;
-    plot(sim_output.time,  sim_output.attitude.theta);
+    plot(sim_output.time, theta);
+    ytickformat('%.3g');
     ylabel('\theta [deg]');
     xlabel(time_label);
     
+    % Force phi between -180 and 180:
+    psi = sim_output.attitude.psi;
+    idx = psi > 180;
+    psi(idx) = psi(idx) - 360;
+    
     subplot(1,3,3); hold on;
-    plot(sim_output.time,  sim_output.attitude.psi);
+    plot(sim_output.time, psi);
+    ytickformat('%.3g');
     ylabel('\psi [deg]');
     xlabel(time_label);
     

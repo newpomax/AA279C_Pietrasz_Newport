@@ -79,6 +79,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['Semimajor axis of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('a [km]');
 
     % eccentricity
@@ -90,6 +91,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['Eccentricity of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('e');
 
     % inclination
@@ -101,6 +103,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['Inclination of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('i [deg]');
 
     % RAAN
@@ -112,6 +115,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['RAAN of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('RAAN [deg]');
 
     % w
@@ -123,6 +127,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['Argument of Periapsis of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('w [deg]');
 
     % E
@@ -134,6 +139,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['Eccentric anomaly of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('E [rad]');
 
     %% Plot dOE/dt
@@ -153,6 +159,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['da/dt of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('da/dt [m/s]');
 
     % de/dt
@@ -164,6 +171,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['de/dt of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('de/dt');
 
     % di/dt
@@ -176,6 +184,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['di/dt of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('di/dt [mdeg/sec]');
 
     % dRAAN/dt
@@ -187,6 +196,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['dRAAN/dt of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('dRAAN/dt [mdeg/s]');
 
     % dw/dt
@@ -198,6 +208,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['dw/dt of ', mission_name];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('dw/dt [deg/s]');
 
     % dE/dt
@@ -209,6 +220,7 @@ function plot_orbital_elements(sim_constants, sim_output, plot_format)
     title_text = ['dE/dt of ', mission_name, ' relative to n'];
     title(title_text);
     xlabel(time_label);
+    ytickformat('%.3g');
     ylabel('dE/dt [rad/s]');
 
 end

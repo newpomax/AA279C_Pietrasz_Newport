@@ -93,8 +93,8 @@ text(-0.5, -0.75, 'Unstable roll');
 % Satellite
 plot([kT], [kR], 'k.', 'MarkerSize', 25);
 text_string = strcat('LS2 (-', num2str(round(kT, 5)), ', ', ...
-    num2str(round(kR, 5)), ')');
-text(0.6, 0.93, text_string); 
+    num2str(round(kR, 5)), ') -');
+text(kT, kR, text_string, 'HorizontalAlignment', 'right'); 
 
 % Alternative options
 % Still need to finish
