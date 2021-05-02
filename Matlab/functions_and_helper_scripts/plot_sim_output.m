@@ -100,7 +100,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     
     %% Plot s/c Torques in Principal Axes
     figure('Name',strcat(mission_name, ' Environmental Torques'));
-    % w_x
+    % M_x
     subplot(1,3,1);
     hold on;
 
@@ -110,31 +110,31 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title(title_text);
     xlabel(time_label);
     ytickformat('%.3g');
-    ylabel('w_x [rad/s]');
+    ylabel('M_x [rad/s]');
     
-    % w_y
+    % M_y
     subplot(1,3,2);
     hold on;
 
     plot(downsampled_time, downsample(sim_output.ext_torques.My, df));
 
-    title_text = ['w_y of ', mission_name, ' in s/c principle axes'];
+    title_text = ['M_y of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
     ytickformat('%.3g');
-    ylabel('w_y [rad/s]');
+    ylabel('M_y [rad/s]');
     
-    % w_z
+    % M_z
     subplot(1,3,3);
     hold on;
 
     plot(downsampled_time, downsample(sim_output.ext_torques.Mz, df));
 
-    title_text = ['w_z of ', mission_name, ' in s/c principle axes'];
+    title_text = ['M_z of ', mission_name, ' in s/c principle axes'];
     title(title_text);
     xlabel(time_label);
     ytickformat('%.3g');
-    ylabel('w_z [rad/s]');
+    ylabel('M_z [rad/s]');
     
     % Maybe control torques here?
     

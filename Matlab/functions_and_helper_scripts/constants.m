@@ -42,8 +42,9 @@ sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor i
 % Day of year	Date,       Mean Motion a           h           e
 % 189.19929602  8 July 2019 14.52524232 7095.553    717.4175    0.0010951
 
-% Epoch data (currently unused)
+% Epoch data 
 sim_constants.start_date = [2019, 07, 08.19929602]; % [YYYY, MM, DD.dd]
+sim_constants.MJD0 = mjuliandate(sim_constants.start_date); % Modified julian date at simulation start
 sim_constants.vernal_equinox = [2019, 03, 20.7594907];
 
 % Orbital elements (from data)
