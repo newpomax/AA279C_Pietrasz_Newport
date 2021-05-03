@@ -30,6 +30,8 @@ sim_constants.Cdiff = 0.5; % diffusive reflection coefficient for SRP
 [C, N, sim_constants.surf_areas] = get_surfacedata(); % get surface information from CSV (surface area in m^2)
 sim_constants.surf_centroids = C*sim_constants.rotm; % centroid locations in principal axes, in m
 sim_constants.surf_norms = N*sim_constants.rotm; % surface normals in principal axes
+sim_constants.cp = sum((sim_constants.surf_areas*ones(1,size(sim_constants.surf_centroids,2)))...
+                        .*sim_constants.surf_centroids)/sum(sim_constants.surf_areas); % center of pressure in princ axes
 
 % Momentum wheel (from data sheet)
 sim_constants.I_r = 0.8*0.226*(0.032^2); % kg*m^2, moment of inertia of wheel
