@@ -42,21 +42,21 @@ figure('Name','Torque Comparison'); hold on;
 labs = {'x', 'y', 'z'};
 for i = 1:3
     subplot(1,4,i); 
-    semilogy(time_df,abs(downsample(M_grav.Data(:,i),df)),'DisplayName','Gravitational Torque');
+    semilogy(time_df,abs(downsample(M_grav.Data(:,i),df)),'DisplayName','Gravitational');
     hold on;
-    semilogy(time_df,abs(downsample(M_drag.Data(:,i),df)),'DisplayName','Drag Torque');
+    semilogy(time_df,abs(downsample(M_drag.Data(:,i),df)),'DisplayName','Drag');
 %     semilogy(time_df,abs(downsample(M_mag.Data(:,i),df)),'DisplayName','Magnetic Torque');
-    semilogy(time_df,abs(downsample(M_SRP.Data(:,i),df)),'DisplayName','SRP Torque');
+    semilogy(time_df,abs(downsample(M_SRP.Data(:,i),df)),'DisplayName','SRP');
     xlabel(time_label); ylabel('Torque, N\cdot m');
     title_text = ['M_' labs{i} ' of ', plot_format.mission_name, ' in s/c principle axes'];
     title(title_text); legend;
 end
 subplot(1,4,4); 
-semilogy(time_df,downsample(sqrt(sum(M_grav.Data.^2, 2)), df),'DisplayName','Gravitational Torque');
+semilogy(time_df,downsample(sqrt(sum(M_grav.Data.^2, 2)), df),'DisplayName','Gravitational');
 hold on;
-semilogy(time_df,downsample(sqrt(sum(M_drag.Data.^2, 2)), df),'DisplayName','Drag Torque');
+semilogy(time_df,downsample(sqrt(sum(M_drag.Data.^2, 2)), df),'DisplayName','Drag');
 %     semilogy(time_df,downsample(sqrt(sum(M_mag.Data.^2, 2)), df),'DisplayName','Magnetic Torque');
-semilogy(time_df,downsample(sqrt(sum(M_SRP.Data.^2, 2)), df),'DisplayName','SRP Torque');
+semilogy(time_df,downsample(sqrt(sum(M_SRP.Data.^2, 2)), df),'DisplayName','SRP');
 xlabel(time_label); ylabel('Torque, N\cdot m');
 title_text = ['|M| of ', plot_format.mission_name, ' in s/c principle axes'];
 title(title_text); legend('location','best');
