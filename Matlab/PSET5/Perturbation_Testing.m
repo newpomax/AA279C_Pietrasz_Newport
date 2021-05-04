@@ -26,7 +26,8 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
-sim_constants.angvel0 = deg2rad([0; 0; 8]);
+sim_constants.q0 = [0; sqrt(2)/2; 0; sqrt(2)/2]; % point z in direction of motion, more or less
+sim_constants.angvel0 = deg2rad([0; 0; 8]); % spin about z
 sim('Propagator');
 
 % Extract + plot data
@@ -62,9 +63,32 @@ xlabel(time_label); ylabel('Torque, N\cdot m');
 title_text = ['|M| of ', plot_format.mission_name, ' in s/c principle axes'];
 title(title_text); legend('location','best');
 
-
+% Predicted values from Wertz
+cpA = norm(sim_constants.cp); % center of pressure distance from CoM
+rho = atmospheric_model(sim_constants.R_Earth, ECI_positions.Data(1,:));
+theta_max = pi/3;
+Mg_max = 1.5*sim_constants.mu_Earth/(norm(ECI_positions.Data(1,:))^3)...
+            *(sim_constants.I_princ(3)-sim_constants.I_princ(1))*sin(2*theta_max);
+Msrp_max = cp*sim_constants.SRP*sim_constants.effective_area_sat_max*1.6 ;
+Mdrag_max = 0.5*cp*rho*sim_constants.Cdrag*sim_constants.effective_area_sat_max*(norm(1000*ECI_velocities.Data(1,:))^2);
+fprintf('Wertz Grav Torque: %0.3e Nm \n Wertz SRP Torque: %0.3e Nm \n Wertz Drag Torque: %0.3e Nm \n', Mg_max, Msrp_max, Mdrag_max);
 %% beep beep
 
 beep;
 pause(0.5);
 beep;
+
+% atmo model
+function rho = atmospheric_model(R_Earth, rECI)
+    a = norm(rECI); % distance from Earth center in km
+
+    % Atmospheric density
+    % From http://www.braeunig.us/space/atmos.htm
+    % Density @ reference altitude h0 = 550km
+    rho_0 = (2.14*10^-13); % kg m-3 -> kg km-3, 
+    h0 = 550 + R_Earth; % km, reference altitude -> radius
+    H = 68.7; % km, atmospheric scale height
+    
+    rho = rho_0*exp(-(a-h0)/H); % kg km-3
+    rho = rho; % kg m-3
+end
