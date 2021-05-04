@@ -31,7 +31,8 @@ sim('Propagator');
 
 % Extract + plot data
 sim_output = extract_sim_output(sim_constants, plot_format, OE, dOE_dt, ...
-    w, w_r, q, e, A, M_perturbations, ECI_positions, ECEF_positions, RTN2ECI, geod_positions);
+    w, w_r, q, e, A,e_err, A_err, e_target, A_target, M_perturbations, ...
+    ECI_positions, ECEF_positions, RTN2ECI, geod_positions);
 plot_sim_output(sim_constants, sim_output, plot_format);
 
 time_label = ['Time [', num2str(plot_format.time_increments), ']'];

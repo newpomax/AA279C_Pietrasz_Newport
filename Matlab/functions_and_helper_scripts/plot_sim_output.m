@@ -311,4 +311,60 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['312 Euler Angles of ', mission_name];
     sgtitle(title_text);
     
+    %% Plot attitude control error
+    
+    % Force phi between -180 and 180:
+    phi = sim_output.attitude.err_phi;
+    idx = phi > 180;
+    phi(idx) = phi(idx) - 360;
+    phi_targ = sim_output.attitude.targ_phi;
+    idx = phi_targ > 180;
+    phi_targ(idx) = phi_targ(idx) - 360;
+    
+    figure('Name',strcat(mission_name, ' Attitude Error')); 
+    hold on;
+    subplot(1,3,1); hold on;
+    plot(sim_output.time, phi_targ);
+    plot(sim_output.time, phi);
+    ytickformat('%.3g');
+    ylabel('\phi [deg]');
+    xlabel(time_label);
+    legend('Target','Error');
+    
+    % Force theta between -90 and 90:
+    % Assumes no values btwn 90 and 270 (which there shouldn't be).
+    theta = sim_output.attitude.err_theta;
+    idx = theta > 270;
+    theta(idx) = theta(idx) - 360;
+    theta_targ = sim_output.attitude.targ_theta;
+    idx = theta_targ > 270;
+    theta_targ(idx) = theta_targ(idx) - 360;
+    
+    subplot(1,3,2); hold on;
+    plot(sim_output.time, theta_targ);
+    plot(sim_output.time, theta);
+    ytickformat('%.3g');
+    ylabel('\theta [deg]');
+    xlabel(time_label);
+    legend('Target','Error');
+    
+    % Force phi between -180 and 180:
+    psi = sim_output.attitude.err_psi;
+    idx = psi > 180;
+    psi(idx) = psi(idx) - 360;
+    psi_targ = sim_output.attitude.targ_psi;
+    idx = psi_targ > 180;
+    psi_targ(idx) = psi_targ(idx) - 360;
+    
+    subplot(1,3,3); hold on;
+    plot(sim_output.time, psi_targ);
+    plot(sim_output.time, psi);
+    ytickformat('%.3g');
+    ylabel('\psi [deg]');
+    xlabel(time_label);
+    legend('Target', 'Error');
+    
+    title_text = ['312 Euler Angles for Attitude Control Error ', mission_name];
+    sgtitle(title_text);
+    
 end
