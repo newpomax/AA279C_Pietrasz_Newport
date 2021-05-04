@@ -64,7 +64,7 @@ title_text = ['|M| of ', plot_format.mission_name, ' in s/c principle axes'];
 title(title_text); legend('location','best');
 
 % Predicted values from Wertz
-cpA = norm(sim_constants.cp); % center of pressure distance from CoM
+cp = norm(sim_constants.cp); % center of pressure distance from CoM
 rho = atmospheric_model(sim_constants.R_Earth, ECI_positions.Data(1,:));
 theta_max = pi/3;
 Mg_max = 1.5*sim_constants.mu_Earth/(norm(ECI_positions.Data(1,:))^3)...
