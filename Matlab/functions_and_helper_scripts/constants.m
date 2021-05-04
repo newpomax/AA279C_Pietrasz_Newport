@@ -25,6 +25,7 @@ sim_constants.I = [3.10553 -0.00011 -0.00003;
 sim_constants.Cdrag = 1.17; % drag coefficient
 sim_constants.Cspec = 0.5; % spectral reflection coefficient for SRP
 sim_constants.Cdiff = 0.5; % diffusive reflection coefficient for SRP
+sim_constants.target_att_function = @LS2_target_attitude;
 
 % Satellite surfaces
 [C, N, sim_constants.surf_areas] = get_surfacedata(); % get surface information from CSV (surface area in m^2)
