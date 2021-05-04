@@ -12,7 +12,7 @@ constants;
 
 % Simulation settings
 sim_constants.simulation_time = 0.1*3600;
-sim_constants.time_step = 0.1; % s
+sim_constants.time_step = 0.01; % s
 sim_constants.tolerance = 10^-8;
 
 % Plot formatting
@@ -26,7 +26,7 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
-sim_constants.angvel0 = deg2rad([3; 0; 0]);
+sim_constants.angvel0 = deg2rad([0; 0; 1]);
 sim_constants.attitude_perturbations_on = false;
 sim_constants.orbital_perturbations_on = false;
 sim('Propagator');
@@ -49,12 +49,15 @@ time_df = downsample(sim_output.time,df);
 labs = {'\phi', '\theta', '\psi'};
 for i = 1:3
    subplot(1,3,i); hold on;
-   plot(time_df,rad2deg(downsample(e_target.Data(:,i),df)),'DisplayName','Target Angle');
-   plot(time_df,rad2deg(downsample(e.Data(:,i),df)),'DisplayName','Attitude Angle');
-   plot(time_df,rad2deg(downsample(e_err.Data(:,i),df)),'DisplayName','Error Angle');
+   plot(time_df,wrapTo180(rad2deg(downsample(e_target.Data(:,i),df))),'MarkerSize',5,'DisplayName','Target Angle');
+   plot(time_df,wrapTo180(rad2deg(downsample(e.Data(:,i),df))),'DisplayName','Attitude Angle');
+   plot(time_df,wrapTo180(rad2deg(downsample(e_err.Data(:,i),df))),'DisplayName','Error Angle');
    legend; ylabel([labs{i} ', deg']); xlabel(time_label);
    title_text = [labs{i} ' of ', plot_format.mission_name, ' for various DCMs'];
    title(title_text); legend('location','best');
+   if i>1
+      ylim([-5 5]); 
+   end
 end
 
 %% beep beep
