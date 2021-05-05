@@ -11,7 +11,7 @@ constants;
 %% User input
 
 % Simulation settings
-sim_constants.simulation_time = 2*3600; 
+sim_constants.simulation_time = 10*3600; 
 sim_constants.time_step = 0.05; % s
 sim_constants.tolerance = 10^-8;
 
@@ -20,7 +20,7 @@ sim_constants.w_r0 = 0;
 
 % Plot formatting
 plot_format.mission_name = 'LS2';
-plot_format.downsample_factor = 2;
+plot_format.downsample_factor = 20;
 plot_format.plot_orbit_visuals = false;
 plot_format.dock_plots = true;
 plot_format.plot_triads = true;
@@ -32,12 +32,13 @@ plot_format = check_time_increments(plot_format);
 sim_constants.orbital_perturbations_on = false;
 sim_constants.attitude_perturbations_on = true;
 
-% Stable config -- align principal axes with RTN: 
-% ECI_A_RTN = OE2RTN(sim_constants.a0, sim_constants.e0, sim_constants.i0, ...
-%     sim_constants.RAAN0, sim_constants.w0, sim_constants.M0, ...
-%     sim_constants.mu_Earth)';
-% sim_constants.q0 = A2q(ECI_A_RTN);
-% sim_constants.angvel0 = [0; 0; sim_constants.n0]; %rad/s
+% Stable config (align principal axes with RTN) + perturbation
+ECI_A_RTN = OE2RTN(sim_constants.a0, sim_constants.e0, sim_constants.i0, ...
+    sim_constants.RAAN0, sim_constants.w0, sim_constants.M0, ...
+    sim_constants.mu_Earth)';
+sim_constants.q0 = A2q(ECI_A_RTN);
+% Remove "+0.1" if not perturbed
+sim_constants.angvel0 = [0; 0; sim_constants.n0] + 10^-5; % rad/s
 
 %% Quick verification calcs
 
@@ -57,55 +58,70 @@ M_est_nonaligned = (3*sim_constants.mu_Earth/norm(R)^5)* ...
      (I(1) - I(3))*R(3)*R(1);
      (I(2) - I(1))*R(1)*R(2)]
  
- %% Stability
- 
-kR = (I(3)-I(2))/I(1)
-kT = (I(3)-I(1))/I(2)
-kN = (I(2)-I(1))/I(3)
-
-figure();
-hold on;
-
-% unstable pitch
-patch([-1, -1, 1], [-1, 1, 1], 'y', 'FaceAlpha', .4);
-text(0.1, 0.7, 'Unstable pitch'); 
-
-% unstable yaw
-patch([0, 0, 1, 1], [-1, 0, 0, -1], 'b', 'FaceAlpha', .4);
-patch([0, 0, -1, -1], [1, 0, 0, 1], 'b', 'FaceAlpha', .4);
-text(0.4, -0.5, 'Unstable yaw'); 
-
-% unstable roll
-fp = fimplicit(@(x,y) 1 + 3*x + x.*y - 4*sqrt(x.*y), [-1, 0, -1, 0], 'k'); 
-fp_x = fp.XData;
-fp_y = fp.YData;
-patch([fp_x fliplr(fp_x)], [fp_y -1*ones(1,length(fp_y))], ...
-    'r', 'FaceAlpha', .4, 'EdgeAlpha', 0)
-% Estimate the rest of the curve with a parabola
-unstable_roll_x = [-1:0.01:-(1/3) -(1/3)];
-unstable_roll_y = -0.2*(unstable_roll_x+1/3).^2;
-plot(unstable_roll_x, unstable_roll_y, 'k');
-patch([unstable_roll_x, fliplr(unstable_roll_x)], ...
-    [unstable_roll_y -1*ones(1,length(unstable_roll_y))], ...
-    'r', 'FaceAlpha', .4, 'EdgeAlpha', 0);
-text(-0.5, -0.75, 'Unstable roll'); 
-
-% Satellite
-plot([kT], [kR], 'k.', 'MarkerSize', 25);
-text_string = strcat('LS2 (-', num2str(round(kT, 5)), ', ', ...
-    num2str(round(kR, 5)), ') -');
-text(kT, kR, text_string, 'HorizontalAlignment', 'right'); 
-
-% Alternative options
-% Still need to finish
-
-title('Gravity gradient stability diagram');
-xlabel('k_T');
-ylabel('k_R');
-xlim([-1,1]);
-ylim([-1,1]);
-
+% %% Stability
+%  
+% [kR, kT, kN] = calculate_kRTN(I);
+% 
+% figure();
+% hold on;
+% 
+% % unstable pitch
+% patch([-1, -1, 1], [-1, 1, 1], 'y', 'FaceAlpha', .4);
+% text(0.1, 0.7, 'Unstable pitch'); 
+% 
+% % unstable yaw
+% patch([0, 0, 1, 1], [-1, 0, 0, -1], 'b', 'FaceAlpha', .4);
+% patch([0, 0, -1, -1], [1, 0, 0, 1], 'b', 'FaceAlpha', .4);
+% text(0.4, -0.5, 'Unstable yaw'); 
+% 
+% % unstable roll
+% fp = fimplicit(@(x,y) 1 + 3*x + x.*y - 4*sqrt(x.*y), [-1, 0, -1, 0], 'k'); 
+% fp_x = fp.XData;
+% fp_y = fp.YData;
+% patch([fp_x fliplr(fp_x)], [fp_y -1*ones(1,length(fp_y))], ...
+%     'r', 'FaceAlpha', .4, 'EdgeAlpha', 0)
+% % Estimate the rest of the curve with a parabola
+% unstable_roll_x = [-1:0.01:-(1/3) -(1/3)];
+% unstable_roll_y = -0.2*(unstable_roll_x+1/3).^2;
+% plot(unstable_roll_x, unstable_roll_y, 'k');
+% patch([unstable_roll_x, fliplr(unstable_roll_x)], ...
+%     [unstable_roll_y -1*ones(1,length(unstable_roll_y))], ...
+%     'r', 'FaceAlpha', .4, 'EdgeAlpha', 0);
+% text(-0.5, -0.75, 'Unstable roll'); 
+% 
+% % Satellite
+% plot([kT], [kR], 'k.', 'MarkerSize', 25);
+% text_string = strcat('LS2 stable config (', num2str(round(kT, 5)), ', ', ...
+%     num2str(round(kR, 5)), ')');
+% text(kT-0.02, kR, text_string, 'HorizontalAlignment', 'right'); 
+% 
+% % Alternative options
+I_test1 = [I(1), I(3), I(2)];
+[kR, kT, kN] = calculate_kRTN(I_test1);
+% 
+% plot([kT], [kR], 'k.', 'MarkerSize', 25);
+% text_string = strcat('LS2 unstable config 1 (', num2str(round(kT, 5)), ', ', ...
+%     num2str(round(kR, 5)), ')');
+% text(kT+0.02, kR, text_string, 'HorizontalAlignment', 'left'); 
+% 
+I_test2 = [I(3), I(1), I(2)];
+[kR, kT, kN] = calculate_kRTN(I_test2);
+% 
+% plot([kT], [kR], 'k.', 'MarkerSize', 25);
+% text_string = strcat('LS2 unstable config 2 (', num2str(round(kT, 5)), ', ', ...
+%     num2str(round(kR, 5)), ')');
+% text(kT+0.02, kR+0.02, text_string, 'VerticalAlignment', 'bottom'); 
+% 
+% title('Gravity gradient stability diagram');
+% xlabel('k_T');
+% ylabel('k_R');
+% xlim([-1,1]);
+% ylim([-1,1]);
+% 
 %% Run + process sim
+
+% Select config
+sim_constants.I_princ = I; % I, I_test1, or I_test2
 sim('Propagator');
 
 % Extract + plot data
@@ -119,3 +135,10 @@ plot_sim_output(sim_constants, sim_output, plot_format);
 beep;
 pause(0.5);
 beep;
+
+function [kR, kT, kN] = calculate_kRTN(I)
+    % Calculates kR, kT, and kN for gravity gradient analysis given I.
+    kR = (I(3)-I(2))/I(1);
+    kT = (I(3)-I(1))/I(2);
+    kN = (I(2)-I(1))/I(3);
+end
