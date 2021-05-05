@@ -110,7 +110,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title(title_text);
     xlabel(time_label);
     ytickformat('%.3g');
-    ylabel('M_x [rad/s]');
+    ylabel('M_x [Nm]');
     
     % M_y
     subplot(1,3,2);
@@ -122,7 +122,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title(title_text);
     xlabel(time_label);
     ytickformat('%.3g');
-    ylabel('M_y [rad/s]');
+    ylabel('M_y [Nm]');
     
     % M_z
     subplot(1,3,3);
@@ -134,7 +134,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title(title_text);
     xlabel(time_label);
     ytickformat('%.3g');
-    ylabel('M_z [rad/s]');
+    ylabel('M_z [Nm]');
     
     % Maybe control torques here?
     
