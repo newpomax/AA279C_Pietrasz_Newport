@@ -1,6 +1,7 @@
 function sim_output = extract_sim_output(sim_constants, plot_format, ...
     OE, dOE_dt, w, w_r, q, e, A, e_err, A_err, e_targ, A_targ, ...
-    M_perturbations, ECI_positions, ECEF_positions, RTN2ECI, geod_positions)
+    M_perturbations, M_drag, M_grav, M_mag, M_SRP, ...
+    ECI_positions, ECEF_positions, RTN2ECI, geod_positions)
     %% Post-process data output from simulation for plotting and calcs
 
     sim_output = struct;
@@ -48,6 +49,22 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.ext_torques.Mx = M_perturbations.Data(:,1); % rad s-1, principal axes
     sim_output.ext_torques.My = M_perturbations.Data(:,2); % rad s-1, principal axes
     sim_output.ext_torques.Mz = M_perturbations.Data(:,3); % rad s-1, principal axes
+    
+    sim_output.ext_torques.drag_Mx = M_drag.Data(:,1); % rad s-1, principal axes
+    sim_output.ext_torques.drag_My = M_drag.Data(:,2); % rad s-1, principal axes
+    sim_output.ext_torques.drag_Mz = M_drag.Data(:,3); % rad s-1, principal axes
+    
+    sim_output.ext_torques.grav_Mx = M_grav.Data(:,1); % rad s-1, principal axes
+    sim_output.ext_torques.grav_My = M_grav.Data(:,2); % rad s-1, principal axes
+    sim_output.ext_torques.grav_Mz = M_grav.Data(:,3); % rad s-1, principal axes
+    
+    sim_output.ext_torques.SRP_Mx = M_SRP.Data(:,1); % rad s-1, principal axes
+    sim_output.ext_torques.SRP_My = M_SRP.Data(:,2); % rad s-1, principal axes
+    sim_output.ext_torques.SRP_Mz = M_SRP.Data(:,3); % rad s-1, principal axes
+    
+%     sim_output.ext_torques.mag_Mx = M_mag.Data(:,1); % rad s-1, principal axes
+%     sim_output.ext_torques.mag_My = M_mag.Data(:,2); % rad s-1, principal axes
+%     sim_output.ext_torques.mag_Mz = M_mag.Data(:,3); % rad s-1, principal axes
     
     %% For attitude plots in principal axes
     
