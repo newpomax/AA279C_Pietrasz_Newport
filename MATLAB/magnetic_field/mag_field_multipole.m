@@ -40,8 +40,8 @@ function B_mag = magnetic_field(r, R_Earth, igrf, gmst)
         V_n = zeros(3,3,3);
         
         % Extract relevant coefficients
-        gh_coeff = igrf(n^2:(n+1)^2-1);
-        g = gh_coeff(1:2:end);
+        gh_coeff = igrf(n^2 + 1:(n+1)^2-1);
+        g = [igrf(n^2) ; gh_coeff(1:2:end)];
         h = gh_coeff(2:2:end);
         
         % Calculate Legendre function
@@ -52,10 +52,10 @@ function B_mag = magnetic_field(r, R_Earth, igrf, gmst)
         for m=0:n
             if m == 0
                 % Transpose .' required to correctly compute outer product
-                V_m = V_m + g(m+1)*cosd(long_vec).' * P_mn((m+1),:);
+                V_m = V_m + g(m+1)*ones(size(long_vec)).' * P_mn(m+1,:);
             else
-                V_m = V_m + ( g(m+1)*cosd((m+1)*long_vec) + ...
-                    h(m)*sind((m+1)*long_vec) ).' * P_mn(m+1,:);
+                V_m = V_m + ( g(m+1)*cosd((m)*long_vec) + ...
+                    h(m)*sind((m)*long_vec) ).' * P_mn(m+1,:);
             end
         end
         rn_normalized = (R_Earth./r_vec).^(n+1);
