@@ -10,8 +10,8 @@ sim_constants.mu_Earth = sim_constants.G*sim_constants.M_Earth; % km3 s-2
 sim_constants.J2 = 0.00108263;        % SMAD p. 143
 sim_constants.dRAAN_dt_sun_synch = 360/(365.24*24*3600); % deg s-1
 sim_constants.SRP = 9.08e-6 ;         % Pa, SRP at 1AU
-% igrf = readmatrix('igrf13coeffs.txt');
-% sim_constants.igrf = igrf(2:25,28); % IGRF 2020 model coefficients
+igrf = readmatrix('igrf13coeffs.txt');
+sim_constants.igrf = igrf(2:25,28)*1e-9; % IGRF 2020 model coefficients, Tesla
 % First N=4 coefficients ordered by n, then m, then g/h
 
 % Satellite mass properties

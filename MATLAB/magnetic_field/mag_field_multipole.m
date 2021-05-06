@@ -1,10 +1,14 @@
 R_Earth = 6371;
 igrf = readmatrix('igrf13coeffs.txt');
-igrf = igrf(2:25,28); % IGRF 2020 model coefficients
+igrf = igrf(2:25,28)*1E-9; % IGRF 2020 model coefficients, in Tesla
 % First N=4 coefficients ordered by n, then m, then g/h
 
 % B_mag = magnetic_field([0, 0, R_Earth], R_Earth, igrf, 0)
 % norm(B_mag)
+B_mag = magnetic_field([45, 0, R_Earth], R_Earth, igrf, 0)
+norm(B_mag)
+B_mag = magnetic_field([45, 45, R_Earth], R_Earth, igrf, 0)
+norm(B_mag)
 B_mag = magnetic_field([90, 0, R_Earth], R_Earth, igrf, 0)
 norm(B_mag)
 B_mag = magnetic_field([0, 90, R_Earth], R_Earth, igrf, 0)
