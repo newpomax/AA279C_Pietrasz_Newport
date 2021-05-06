@@ -48,7 +48,7 @@ for i = 1:3
     semilogy(time_df,abs(downsample(M_grav.Data(:,i),df)),'DisplayName','Gravitational');
     hold on;
     semilogy(time_df,abs(downsample(M_drag.Data(:,i),df)),'DisplayName','Drag');
-     semilogy(time_df,abs(downsample(M_mag.Data(:,i),df)),'DisplayName','Magnetic Torque');
+    semilogy(time_df,abs(downsample(M_mag.Data(:,i),df)),'DisplayName','Magnetic Torque');
     semilogy(time_df,abs(downsample(M_SRP.Data(:,i),df)),'DisplayName','SRP');
     xlabel(time_label); ylabel('Torque, N\cdot m');
     title_text = ['M_' labs{i} ' of ', plot_format.mission_name, ' in s/c principle axes'];
