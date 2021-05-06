@@ -28,6 +28,7 @@ plot_format = check_time_increments(plot_format);
 %% Run + process sim
 sim_constants.q0 = [0; sqrt(2)/2; 0; sqrt(2)/2]; % point z in direction of motion, more or less
 sim_constants.angvel0 = deg2rad([0; 0; 8]); % spin about z
+sim_constants.orbital_perturbations_on = false;
 sim('Propagator');
 
 % Extract + plot data
@@ -69,9 +70,10 @@ rho = atmospheric_model(sim_constants.R_Earth, ECI_positions.Data(1,:));
 theta_max = pi/3;
 Mg_max = 1.5*sim_constants.mu_Earth/(norm(ECI_positions.Data(1,:))^3)...
             *(sim_constants.I_princ(3)-sim_constants.I_princ(1))*sin(2*theta_max);
+Mmag_max = 1.5*norm(sim_constants.mag_mom_princ)*7.96e6/(sim_constants.R_Earth^3); 
 Msrp_max = cp*sim_constants.SRP*sim_constants.effective_area_sat_max*1.6 ;
 Mdrag_max = 0.5*cp*rho*sim_constants.Cdrag*sim_constants.effective_area_sat_max*(norm(1000*ECI_velocities.Data(1,:))^2);
-fprintf('Wertz Grav Torque: %0.3e Nm \n Wertz SRP Torque: %0.3e Nm \n Wertz Drag Torque: %0.3e Nm \n', Mg_max, Msrp_max, Mdrag_max);
+fprintf('Wertz Grav Torque: %0.3e Nm \nWertz Mag Torque: %0.3e Nm \nWertz SRP Torque: %0.3e Nm \nWertz Drag Torque: %0.3e Nm \n', Mg_max, Mmag_max, Msrp_max, Mdrag_max);
 %% beep beep
 
 beep;
