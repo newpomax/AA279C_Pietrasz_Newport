@@ -62,9 +62,9 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.ext_torques.SRP_My = M_SRP.Data(:,2); % rad s-1, principal axes
     sim_output.ext_torques.SRP_Mz = M_SRP.Data(:,3); % rad s-1, principal axes
     
-%     sim_output.ext_torques.mag_Mx = M_mag.Data(:,1); % rad s-1, principal axes
-%     sim_output.ext_torques.mag_My = M_mag.Data(:,2); % rad s-1, principal axes
-%     sim_output.ext_torques.mag_Mz = M_mag.Data(:,3); % rad s-1, principal axes
+    sim_output.ext_torques.mag_Mx = M_mag.Data(:,1); % rad s-1, principal axes
+    sim_output.ext_torques.mag_My = M_mag.Data(:,2); % rad s-1, principal axes
+    sim_output.ext_torques.mag_Mz = M_mag.Data(:,3); % rad s-1, principal axes
     
     %% For attitude plots in principal axes
     
