@@ -44,10 +44,12 @@ sim_constants.w_r0 = 1; % rad/s, initial angular velocity of wheel
 sim_constants.w_rmax = 0.18/sim_constants.I_r; % rad/s, maximum spin rate of wheel
 sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor in body coords (along body X axis)
 
-% Attitude ICs + targets
+% Attitude ICs
 sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate
 sim_constants.q0 = [0; 0; 0; 1]; % principal axes initially aligned with inertial
-sim_constants.target_att_function = @LS2_target_attitude;
+
+% Attitude sensors
+sim_constants.sensor_weights = [1 1 1 1 .01 .01 .01]; % even weighting, one sun sensor, three axis mag and three axis gyro
 
 % Orbital elements (from
 % https://secure.planetary.org/site/SPageNavigator/mission_control.html)
@@ -80,6 +82,7 @@ sim_constants.time_step = 0.5; % s
 sim_constants.tolerance = 10^-8;
 
 sim_constants.use_euler = false; % use quaternions
+sim_constants.use_qmethod = true; % use q-method over deterministic method
 % add J2 and drag perturbations
 sim_constants.orbital_perturbations_on = true;
 % add gravity gradient, magnetic, drag, and SRP perturbations

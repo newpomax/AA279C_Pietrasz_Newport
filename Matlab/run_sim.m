@@ -10,7 +10,7 @@ constants;
 %% User input
 
 % Simulation settings
-sim_constants.simulation_time = 3.5*3600;
+sim_constants.simulation_time = 1.5*3600;
 sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
 
@@ -27,9 +27,10 @@ plot_format = check_time_increments(plot_format);
 %% Run + process sim
 sim('Propagator');
 
-% Extract + plot data
+%% Extract + plot data
 sim_output = extract_sim_output(sim_constants, plot_format, OE, dOE_dt, ...
-    w, w_r, q, e, A, e_err, A_err, e_target, A_target, M_perturbations, ... 
+    w, w_r, q, e, A, e_err, A_err, e_target, A_target, M_perturbations, ...
+    M_drag, M_grav, M_mag, M_SRP, ...
     ECI_positions, ECEF_positions, RTN2ECI, geod_positions);
 plot_sim_output(sim_constants, sim_output, plot_format);
 
