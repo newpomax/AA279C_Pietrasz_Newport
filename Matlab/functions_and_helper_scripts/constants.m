@@ -49,6 +49,10 @@ sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate
 sim_constants.q0 = [0; 0; 0; 1]; % principal axes initially aligned with inertial
 
 % Attitude sensors
+sim_constants.sensor_noise = true;
+sim_constants.gyro_error = 1; % deg
+sim_constants.ss_error = 3; % deg
+sim_constants.mag_error = 5; % deg
 sim_constants.sensor_weights = [1 1 1 1 .01 .01 .01]; % even weighting, one sun sensor, three axis mag and three axis gyro
 
 % Orbital elements (from

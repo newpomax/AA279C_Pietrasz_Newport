@@ -1,6 +1,6 @@
 %% Perturbation modeling
 close all
-clear all
+% clear all
 
 % Add path to subfolders
 addpath(fullfile('..', 'functions_and_helper_scripts'));
@@ -11,16 +11,17 @@ constants;
 %% User input
 
 % Simulation settings
-sim_constants.simulation_time = 0.5*3600;
+sim_constants.simulation_time = 0.5*3600; % s
 sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
 
 % Plot formatting
 plot_format.downsample_factor = 10;
 plot_format.mission_name = 'LS2';
-plot_format.plot_orbit_visuals = true;
+plot_format.plot_orbit_visuals = false;
 plot_format.dock_plots = true;
-plot_format.plot_triads = true;
+plot_format.plot_triads = false;
+plot_format.ext_torques_verbose = false;
 % set 's', 'min', 'hours', 'days', or 'years'
 plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
@@ -29,6 +30,7 @@ plot_format = check_time_increments(plot_format);
 sim_constants.angvel0 = deg2rad([0; 0; 1]);
 sim_constants.attitude_perturbations_on = true;
 sim_constants.orbital_perturbations_on = false;
+sim_constants.sensor_noise = false;
 sim('Propagator');
 
 % Extract + plot data
