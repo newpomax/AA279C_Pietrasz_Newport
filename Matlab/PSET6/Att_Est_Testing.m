@@ -28,9 +28,10 @@ plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
 sim_constants.angvel0 = deg2rad([0; 0; 1]);
-sim_constants.attitude_perturbations_on = true;
+sim_constants.attitude_perturbations_on = false;
 sim_constants.orbital_perturbations_on = false;
 sim_constants.sensor_noise = true;
+sim_constants.use_qmethod = true;
 sim('Propagator');
 
 % Extract + plot data
@@ -48,8 +49,9 @@ figure('Name','Attitude Estimate'); hold on;
 labs = {'\phi', '\theta', '\psi'};
 for i = 1:3
    subplot(1,3,i); hold on;
-   plot(time_df,wrapTo180(rad2deg(downsample(e_est.Data(:,i),df))),'MarkerSize',5,'DisplayName','SC Estimated Angle');
-   plot(time_df,wrapTo180(rad2deg(downsample(e.Data(:,i),df))),'DisplayName','Attitude Angle');
+   plot(time_df,wrapTo180(rad2deg(downsample(e_est.Data(:,i),df))),'Linewidth',1,'DisplayName','SC Estimated Angle');
+   %plot(time_df,wrapTo180(rad2deg(downsample(e_estw.Data(:,i),df))),'LineWidth',1.5,'DisplayName','SC Gyro Estimated Angle');
+   plot(time_df,wrapTo180(rad2deg(downsample(e.Data(:,i),df))),'LineWidth',1,'DisplayName','Attitude Angle');
    legend; ylabel([labs{i} ', deg']); xlabel(time_label);
    title_text = [labs{i} ' of ', plot_format.mission_name];
    title(title_text); legend('location','best');

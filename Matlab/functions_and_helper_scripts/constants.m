@@ -56,7 +56,7 @@ sim_constants.ss_error = deg2rad([3 3]); % rad
 sim_constants.ss_bias = deg2rad([0.7 0.2]); % rad
 sim_constants.mag_error = deg2rad([5 5 5]); % rad
 sim_constants.mag_bias = deg2rad([.02 -0.01 0.02]); % deg
-sim_constants.sensor_weights = [1 1 1 1 .01 .01 .01]; % even weighting, one sun sensor, three axis mag and three axis gyro
+sim_constants.sensor_weights = [1 1 1]; % even weighting, three measurements made from 2 sensors (sun + magnetometer)
 
 % Orbital elements (from
 % https://secure.planetary.org/site/SPageNavigator/mission_control.html)
