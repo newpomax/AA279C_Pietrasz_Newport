@@ -30,7 +30,7 @@ plot_format = check_time_increments(plot_format);
 sim_constants.angvel0 = deg2rad([0; 0; 1]);
 sim_constants.attitude_perturbations_on = true;
 sim_constants.orbital_perturbations_on = false;
-sim_constants.sensor_noise = false;
+sim_constants.sensor_noise = true;
 sim('Propagator');
 
 % Extract + plot data
