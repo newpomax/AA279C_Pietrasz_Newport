@@ -51,7 +51,7 @@ sim_constants.q0 = [0; 0; 0; 1]; % principal axes initially aligned with inertia
 % Attitude sensors
 sim_constants.sensor_noise = true;
 sim_constants.gyro_error = deg2rad([1 1 1]); % rad/axis
-sim_constants.gyro_bias = deg2rad([0.02 0.01 -0.03]); % rad/axis
+sim_constants.gyro_bias = deg2rad([0.02 0.01 -0.03]/3600); % rad/axis
 sim_constants.ss_error = deg2rad([3 3]); % rad
 sim_constants.ss_bias = deg2rad([0.7 0.2]); % rad
 sim_constants.mag_error = deg2rad([5 5 5]); % rad
