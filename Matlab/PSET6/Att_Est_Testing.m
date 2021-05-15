@@ -29,7 +29,7 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
-sim_constants.angvel0 = deg2rad([0; 0; 1]);
+sim_constants.angvel0 = deg2rad([0; 0; 2]);
 sim_constants.attitude_perturbations_on = false;
 sim_constants.orbital_perturbations_on = false;
 sim_constants.sensor_noise = true;
