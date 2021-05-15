@@ -35,7 +35,7 @@ function [mu_out, cov_out, z_pre, z_post] = satEKF(mu_in, cov_in, torque, meas, 
     % Update state using sensitivity matrix
     Ct = C(q,bS,Anew,B_ECI,S_ECI); % Sensitivity matrix
     K = cov_p*(Ct.')/(Ct*cov_p*(Ct.') + R) ; % Kalman Gain
-    mu_out = mu_p + K*(meas-meas_p);
+    mu_out = mu_p + K*z_pre;
     cov_out = cov_p - K*Ct*cov_p ;
     z_post = meas - g(mu_out,Anew*B_ECI,Anew*S_ECI); % post-fit residual (diff between real and estimated)
 end
