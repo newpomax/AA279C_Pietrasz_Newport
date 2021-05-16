@@ -6,23 +6,26 @@ clear all
 addpath(fullfile('..', 'functions_and_helper_scripts'));
 
 % Load simulation data
-load('EKF_testing_nomagnoise.mat');
+load('EKF_testing_nonoise.mat');
 w_meas = squeeze(w_meas.Data).';
 B_meas = B_meas.Data;
 B_meas = B_meas./(sqrt(sum(B_meas.^2,2))*ones(1,3)); % convert to just direction
-S_meas = S_meas.Data;
+Sazel_meas = Sazel_meas.Data;
 B_ECI = B_ECI.Data;
 B_ECI = B_ECI./(sqrt(sum(B_ECI.^2,2))*ones(1,3)); % convert to just direction
 S_ECI = S_ECI.Data;
 M = M_perturbations.Data; % torque input (should be p small generally)
 
 % Add new sim_constants items
+sim_constants.sunsensor_rotm = eye(3); % sun sensor frame = princ axes
 sim_constants.mu0 = [0;0;0;1;0.01;0.01;0.01;0;0;0;0;0;0;0;0]; % initial estimate
 sim_constants.cov0 = eye(15); % initial covariance
 sim_constants.Q = 0.1*sim_constants.time_step*eye(15); % process noise
-sim_constants.R = 0.01*eye(9); % measurement noise (will need updated for new sensor measurements)
-sim_constants.R(1:3,1:3) = diag(sim_constants.gyro_error/sqrt(3));
+sim_constants.R = eye(8); % measurement noise (will need updated for new sensor measurements)
+sim_constants.R(1:3,1:3) = diag(sim_constants.gyro_error);
 sim_constants.R(4:6,4:6) = diag(sim_constants.mag_error);
+sim_constants.R(7:8,7:8) = diag(sim_constants.ss_error);
+% sim_constants.R = zeros(8);
 
 % Run EKF simulator
 sim('EKF_Testing');

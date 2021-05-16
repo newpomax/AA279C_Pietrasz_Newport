@@ -52,10 +52,10 @@ sim_constants.q0 = [0; 0; 0; 1]; % principal axes initially aligned with inertia
 sim_constants.sensor_noise = true;
 sim_constants.gyro_error = deg2rad([1 1 1]); % rad/axis
 sim_constants.gyro_bias = deg2rad([0.02 0.01 -0.03]/3600); % rad/axis
-sim_constants.ss_error = deg2rad([3 3]); % rad
-sim_constants.ss_bias = deg2rad([0.7 0.2]); % rad
-sim_constants.mag_error = 1E-12*[0 1 1]; % Tesla, expect readings near 30-60E-6 Tesla
-sim_constants.mag_bias = [1E-11 1E-10 -2E-11]; % Tesla
+sim_constants.ss_error = 0*deg2rad([3 3]); % rad
+sim_constants.ss_bias = 0*deg2rad([0.7 0.2]); % rad
+sim_constants.mag_error =0* 1E-12*[0 1 1]; % Tesla, expect readings near 30-60E-6 Tesla
+sim_constants.mag_bias = 0*[1E-11 1E-10 -2E-11]; % Tesla
 sim_constants.sensor_weights = [1 1 1]; % even weighting, three measurements made from 2 sensors (sun + magnetometer)
 
 % Orbital elements (from
