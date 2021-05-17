@@ -13,7 +13,7 @@ constants;
 %% User input
 
 % Simulation settings
-sim_constants.simulation_time = 0.25*3600; % s
+sim_constants.simulation_time = 3600; % s
 sim_constants.time_step = 0.1; % s
 sim_constants.tolerance = 10^-8;
 

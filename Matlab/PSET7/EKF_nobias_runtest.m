@@ -6,8 +6,8 @@ clear all
 addpath(fullfile('..', 'functions_and_helper_scripts'));
 
 % Load simulation data
-load('EKF_testing.mat');
-w_meas = squeeze(w_meas.Data).';
+load('EKF_testing_nobias.mat');
+w_meas = w_meas.Data;
 B_meas = B_meas.Data;
 B_meas = B_meas;%./(sqrt(sum(B_meas.^2,2))*ones(1,3)); % convert to just direction
 Sazel_meas = Sazel_meas.Data;
@@ -18,13 +18,14 @@ M = M_perturbations.Data; % torque input (should be p small generally)
 
 % Add new sim_constants items
 sim_constants.sunsensor_rotm = eye(3); % sun sensor frame = princ axes
-sim_constants.mu0 = [0;0;0;1;0.01;0.01;0.01]; % initial estimate
+sim_constants.mu0 = [0;0;0;1;deg2rad([0.1; 0.1; 3])]; % initial estimate
 sim_constants.cov0 = eye(7); % initial covariance
-sim_constants.Q = 0.1*sim_constants.time_step*eye(7); % process noise
+sim_constants.Q = 1E-2*sim_constants.time_step*eye(7); % process noise
 sim_constants.R = eye(8); % measurement noise 
 sim_constants.R(1:3,1:3) = diag(sim_constants.gyro_error);
 sim_constants.R(4:6,4:6) = diag(sim_constants.mag_error);
 sim_constants.R(7:8,7:8) = diag(sim_constants.ss_error);
+sim_constants.R = 1E2*sim_constants.R;
 
 % Run EKF simulator
 sim('EKF_noBias_Testing');
@@ -32,12 +33,21 @@ sim('EKF_noBias_Testing');
 %% Get estimated attitude in Euler312 angles
 A_EKF = zeros(length(q_EKF.Data),3,3);
 e_EKF = zeros(length(q_EKF.Data),3);
+e_EKFesterr = zeros(size(e_EKF));
+e_EKFtargerr = zeros(size(e_EKF));
+q_cov = zeros(length(q_EKF.Data),4);
+w_cov = zeros(size(e_EKF));
 for i = 1:length(e_EKF)
     myq = q_EKF.Data(i,:);
     myq = myq/norm(myq);
     myA = q2A(myq.');
    A_EKF(i,:,:) = myA;
+   e_EKFesterr(i,:) = A2e(squeeze(A.Data(:,:,i))*(myA.'));
+   e_EKFtargerr(i,:) = A2e(squeeze(A_target.Data(:,:,i))*(myA.'));
+   
    e_EKF(i,:) = A2e(myA);
+   q_cov(i,:) = diag(squeeze(cov_q.Data(:,:,i)));
+   w_cov(i,:) = diag(squeeze(cov_w.Data(:,:,i)));
 end
 
 %% Plot stuff
@@ -57,14 +67,26 @@ for i = 1:3
    title(title_text); legend('location','best');
 end
 
+figure('Name','Attitude Est Err'); hold on;
+labs = {'\phi', '\theta', '\psi'};
+
+for i = 1:3
+   subplot(1,3,i); hold on;
+   plot(time_df,wrapTo180(rad2deg(downsample(e_esterr.Data(:,i),df))),'LineWidth',1,'DisplayName','Est. Err, Q-method');
+   plot(time_df,wrapTo180(rad2deg(downsample(e_EKFesterr(:,i),df))),':','LineWidth',1.5,'DisplayName','ESt. Err, EKF');
+   legend; ylabel([labs{i} ', deg']); xlabel(time_label);
+   title_text = [labs{i} ' of ', plot_format.mission_name];
+   title(title_text); legend('location','best');
+end
+
 figure('Name','Ang Vel Estimate'); hold on;
 labs = {'\omega_x', '\omega_y', '\omega_z'};
 for i = 1:3
    subplot(1,3,i); hold on;
-   plot(time_df,wrapTo180(rad2deg(downsample(w_meas(:,i),df))), ':', 'Linewidth',1,'DisplayName','Measured \omega');
-   plot(time_df,wrapTo180(rad2deg(downsample(w.Data(:,i),df))),'LineWidth',1,'DisplayName','True \omega');
-   plot(time_df,wrapTo180(rad2deg(downsample(w_EKF.Data(:,i),df))),':','LineWidth',1.5,'DisplayName','EKF');
-   legend; ylabel([labs{i} ', rad/s']); xlabel(time_label);
+   plot(time_df,rad2deg(downsample(w_meas(:,i),df)), ':', 'Linewidth',1,'DisplayName','Measured \omega');
+   plot(time_df,rad2deg(downsample(w.Data(:,i),df)),'LineWidth',1,'DisplayName','True \omega');
+   plot(time_df,rad2deg(downsample(w_EKF.Data(:,i),df)),':','LineWidth',1.5,'DisplayName','EKF');
+   legend; ylabel([labs{i} ', deg/s']); xlabel(time_label);
    title_text = [labs{i} ' of ', plot_format.mission_name];
    title(title_text); legend('location','best');
 end

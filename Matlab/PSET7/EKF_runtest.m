@@ -7,7 +7,7 @@ addpath(fullfile('..', 'functions_and_helper_scripts'));
 
 % Load simulation data
 load('EKF_testing.mat');
-w_meas = squeeze(w_meas.Data).';
+w_meas = w_meas.Data;
 B_meas = B_meas.Data;
 Sazel_meas = Sazel_meas.Data;
 B_ECI = B_ECI.Data;
@@ -23,7 +23,6 @@ sim_constants.R = eye(8); % measurement noise
 sim_constants.R(1:3,1:3) = diag(sim_constants.gyro_error);
 sim_constants.R(4:6,4:6) = diag(sim_constants.mag_error);
 sim_constants.R(7:8,7:8) = diag(sim_constants.ss_error);
-% sim_constants.R = zeros(8);
 
 % Run EKF simulator
 sim('EKF_Testing');
@@ -61,10 +60,10 @@ labs = {'\omega_x', '\omega_y', '\omega_z'};
 
 for i = 1:3
    subplot(1,3,i); hold on;
-   plot(time_df,wrapTo180(rad2deg(downsample(w_meas(:,i),df))), ':', 'Linewidth',1,'DisplayName','Measured \omega');
-   plot(time_df,wrapTo180(rad2deg(downsample(w.Data(:,i),df))),'LineWidth',1,'DisplayName','True \omega');
-   plot(time_df,wrapTo180(rad2deg(downsample(w_EKF.Data(:,i),df))),':','LineWidth',1.5,'DisplayName','EKF');
-   legend; ylabel([labs{i} ', rad/s']); xlabel(time_label);
+   plot(time_df,rad2deg(downsample(w_meas(:,i),df)), ':', 'Linewidth',1,'DisplayName','Measured \omega');
+   plot(time_df,rad2deg(downsample(w.Data(:,i),df)),'LineWidth',1,'DisplayName','True \omega');
+   plot(time_df,rad2deg(downsample(w_EKF.Data(:,i),df)),':','LineWidth',1.5,'DisplayName','EKF');
+   legend; ylabel([labs{i} ', deg/s']); xlabel(time_label);
    title_text = [labs{i} ' of ', plot_format.mission_name];
    title(title_text); legend('location','best');
 end
@@ -73,8 +72,8 @@ figure('Name','\omega Bias Estimate'); hold on;
 labs = {'b_{\omega,x}', 'b_{\omega,y}', 'b_{\omega,z}'};
 for i = 1:3
    subplot(1,3,i); hold on;
-   plot(time_df,downsample(bw.Data(:,i),df), ':', 'Linewidth',1,'DisplayName','EKF estimated bias');
-   legend; ylabel([labs{i} ', rad/s']); xlabel(time_label);
+   plot(time_df,rad2deg(downsample(bw.Data(:,i),df)), ':', 'Linewidth',1,'DisplayName','EKF estimated bias');
+   legend; ylabel([labs{i} ', deg/s']); xlabel(time_label);
    title_text = [labs{i} ' of ', plot_format.mission_name];
    title(title_text); 
 end
