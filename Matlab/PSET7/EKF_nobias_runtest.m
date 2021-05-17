@@ -69,10 +69,10 @@ for i = 1:3
    title(title_text); legend('location','best');
 end
 
-figure('Name','Quat Resids'); hold on;
-labs = {'q_1', 'q_2', 'q_3', 'q_4'};
-for i = 1:4
-   subplot(1,4,i); hold on;
+figure('Name','Ang Vel Resids'); hold on;
+labs = {'\omega_1', '\omega_2', '\omega_3'};
+for i = 1:3
+   subplot(1,3,i); hold on;
    plot(time_df,downsample(z_pre.Data(:,i),df), ':', 'Linewidth',1,'DisplayName','Pre-fit Difference');
    plot(time_df,downsample(z_post.Data(:,i),df), ':', 'Linewidth',1,'DisplayName','Post-fit Difference');
    legend; ylabel([labs{i}]); xlabel(time_label);
@@ -80,13 +80,24 @@ for i = 1:4
    title(title_text); legend('location','best');
 end
 
-figure('Name','Ang Vel Resids'); hold on;
-labs = {'\omega_1', '\omega_2', '\omgea_3'};
+figure('Name','Mag Resids'); hold on;
+labs = {'B_1', 'B_2', 'B_3'};
 for i = 1:3
-   subplot(1,4,i); hold on;
-   plot(time_df,downsample(z_pre.Data(:,i+4),df), ':', 'Linewidth',1,'DisplayName','Pre-fit Difference');
-   plot(time_df,downsample(z_post.Data(:,i+4),df), ':', 'Linewidth',1,'DisplayName','Post-fit Difference');
-   legend; ylabel([labs{i}]); xlabel(time_label);
+   subplot(1,3,i); hold on;
+   plot(time_df,downsample(z_pre.Data(:,i+3),df), ':', 'Linewidth',1,'DisplayName','Pre-fit Difference');
+   plot(time_df,downsample(z_post.Data(:,i+3),df), ':', 'Linewidth',1,'DisplayName','Post-fit Difference');
+   legend; ylabel([labs{i} ', Tesla']); xlabel(time_label);
+   title_text = [labs{i} ' residuals of ', plot_format.mission_name];
+   title(title_text); legend('location','best');
+end
+
+figure('Name','SS Resids'); hold on;
+labs = {'azimuth','elevation'};
+for i = 1:2
+   subplot(1,2,i); hold on;
+   plot(time_df,rad2deg(downsample(z_pre.Data(:,i+6),df)), ':', 'Linewidth',1,'DisplayName','Pre-fit Difference');
+   plot(time_df,rad2deg(downsample(z_post.Data(:,i+6),df)), ':', 'Linewidth',1,'DisplayName','Post-fit Difference');
+   legend; ylabel([labs{i} ', deg']); xlabel(time_label);
    title_text = [labs{i} ' residuals of ', plot_format.mission_name];
    title(title_text); legend('location','best');
 end
