@@ -343,7 +343,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     idx = phi_targ > 180;
     phi_targ(idx) = phi_targ(idx) - 360;
     
-    figure('Name',strcat(mission_name, ' Attitude Error')); 
+    figure('Name', strcat(mission_name, 'Target Attitude Error')); 
     hold on;
     subplot(1,3,1); hold on;
     plot(sim_output.time, phi_targ);
