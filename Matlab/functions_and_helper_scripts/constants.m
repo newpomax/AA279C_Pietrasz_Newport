@@ -47,6 +47,14 @@ sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor i
 % Magnetorquers (from data sheet)
 sim_constants.m_magtor_max = 2.0; %Am^2
 
+% Control coefficients + constants
+sim_constants.k_p = 1;
+sim_constants.k_d = 1;
+sim_constants.state_debounce_time = 10; % sec
+sim_constants.slew_lower = sind(3); % mean anomaly delta from breakpoint at which slew begins
+sim_constants.slew_upper = sind(10); % mean anomaly delta from breakpoint at which slew ends
+sim_constants.tumble_limit = deg2rad(15); % rad/s, angular velocity limit at which SC goes into detumble mode
+
 % Attitude ICs
 sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate
 sim_constants.q0 = [0; 0; 0; 1]; % principal axes initially aligned with inertial
@@ -60,6 +68,13 @@ sim_constants.ss_bias = deg2rad([0.7 0.2]); % rad
 sim_constants.mag_error = (1E-6*[1 1 1]/2).^2; % Tesla, expect readings near 30-60E-6 Tesla
 sim_constants.mag_bias = [1E-7 1E-8 -2E-8]; % Tesla
 sim_constants.sensor_weights = [1 1 1]; % even weighting, three measurements made from 2 sensors (sun + magnetometer)
+
+% EKF Input
+sim_constants.Q = 1E-2*sim_constants.time_step*eye(7); % process noise
+sim_constants.R = eye(8); % measurement noise 
+sim_constants.R(1:3,1:3) = diag(sim_constants.gyro_error);
+sim_constants.R(4:6,4:6) = diag(sim_constants.mag_error);
+sim_constants.R(7:8,7:8) = diag(sim_constants.ss_error);
 
 % Orbital elements (from
 % https://secure.planetary.org/site/SPageNavigator/mission_control.html)
