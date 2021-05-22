@@ -42,7 +42,10 @@ sim_constants.cp = sum((sim_constants.surf_areas*ones(1,size(sim_constants.surf_
 sim_constants.I_r = 0.8*0.226*(0.032^2); % kg*m^2, moment of inertia of wheel
 sim_constants.w_r0 = 1; % rad/s, initial angular velocity of wheel
 sim_constants.w_rmax = 0.18/sim_constants.I_r; % rad/s, maximum spin rate of wheel
-sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor in body coords (along body X axis)
+sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor in princ coords (along body X axis)
+
+% Magnetorquers (from data sheet)
+sim_constants.m_magtor_max = 2.0; %Am^2
 
 % Attitude ICs
 sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate
