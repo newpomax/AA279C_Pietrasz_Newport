@@ -46,7 +46,7 @@ sim_constants.dw_rdtmax = 20e-3/sim_constants.I_r; % max. acceleration of wheel 
 sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor in princ coords (along body X axis)
 
 % Magnetorquers (from data sheet)
-sim_constants.m_magtor_max = 2E4; %Am^1
+sim_constants.m_magtor_max = 2; %Am^1
 
 % Control coefficients + constants
 desired_response_freq = 0.011; % rad/s
@@ -68,9 +68,9 @@ sim_constants.gyro_error = (deg2rad([0.2 0.2 0.2])/2).^2; % rad/axis
 sim_constants.gyro_bias = deg2rad([0.02 0.01 -0.03]/3600); % rad/axis
 sim_constants.sunsensor_rotm = eye(3);
 sim_constants.ss_error = (deg2rad([.3 .3])/2).^2; % rad
-sim_constants.ss_bias = 0*deg2rad([0.7 0.2]); % rad
+sim_constants.ss_bias = deg2rad([0.7 0.2]); % rad
 sim_constants.mag_error = (1E-7*[1 1 1]/2).^2; % Tesla, expect readings near 30-60E-6 Tesla
-sim_constants.mag_bias = 0*[1E-7 1E-8 -2E-8]; % Tesla
+sim_constants.mag_bias = [1E-7 1E-8 -2E-8]; % Tesla
 sim_constants.sensor_weights = [1 1 1]; % even weighting, three measurements made from 2 sensors (sun + magnetometer)
 
 % EKF Input
