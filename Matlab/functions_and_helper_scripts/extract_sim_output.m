@@ -1,7 +1,7 @@
 function sim_output = extract_sim_output(sim_constants, plot_format, ...
-    OE, dOE_dt, w, w_r, q, e, A, e_err, A_err, e_targ, A_targ, ...
+    OE, dOE_dt, w, w_r, q, e, A, e_err, A_err,e_est, A_est, e_esterr, A_esterr, e_targ, A_targ, ...
     M_perturbations, M_drag, M_grav, M_mag, M_SRP, ...
-    ECI_positions, ECEF_positions, RTN2ECI, geod_positions)
+    ECI_positions, ECEF_positions, RTN2ECI, geod_positions, SC_Mode)
     %% Post-process data output from simulation for plotting and calcs
 
     sim_output = struct;
@@ -67,7 +67,7 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.ext_torques.mag_Mz = M_mag.Data(:,3); % rad s-1, principal axes
     
     %% For attitude plots in principal axes
-    
+    sim_output.attitude.SC_Mode = SC_Mode.Data;
     sim_output.attitude.wx = w.Data(:,1); % rad s-1, principal axes
     sim_output.attitude.wy = w.Data(:,2); % rad s-1, principal axes
     sim_output.attitude.wz = w.Data(:,3); % rad s-1, principal axes
@@ -89,6 +89,14 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.attitude.err_theta = rad2deg(e_err.Data(:,2)); % deg
     sim_output.attitude.err_psi = rad2deg(e_err.Data(:,3)); % deg
     
+    sim_output.attitude.est_phi = rad2deg(e_est.Data(:,1)); % deg
+    sim_output.attitude.est_theta = rad2deg(e_est.Data(:,2)); % deg
+    sim_output.attitude.est_psi = rad2deg(e_est.Data(:,3)); % deg
+    
+    sim_output.attitude.esterr_phi = rad2deg(e_esterr.Data(:,1)); % deg
+    sim_output.attitude.esterr_theta = rad2deg(e_esterr.Data(:,2)); % deg
+    sim_output.attitude.esterr_psi = rad2deg(e_esterr.Data(:,3)); % deg
+    
     sim_output.attitude.targ_phi = rad2deg(e_targ.Data(:,1)); % deg
     sim_output.attitude.targ_theta = rad2deg(e_targ.Data(:,2)); % deg
     sim_output.attitude.targ_psi = rad2deg(e_targ.Data(:,3)); % deg
@@ -96,6 +104,8 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.attitude.A = permute(A.Data, [3,1,2]); % unitless, make time the first index
     sim_output.attitude.princ2inert = permute(A.Data, [3,2,1]); % inverse of A, rotates principal to inertial
     
+    sim_output.attitude.A_est =  permute(A_est.Data, [3,1,2]);
+    sim_output.attitude.A_esterr =  permute(A_esterr.Data, [3,1,2]);
     sim_output.attitude.A_err = permute(A_err.Data, [3,1,2]); % unitless, make time the first index, rotates actual to target
     sim_output.attitude.A_targ = permute(A_targ.Data, [3,1,2]); % unitless, make time the first index, rotates inertial to target
     %% For attitude plots in inertial axes

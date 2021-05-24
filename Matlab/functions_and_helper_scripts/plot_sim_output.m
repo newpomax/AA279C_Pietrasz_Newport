@@ -298,37 +298,52 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     phi = sim_output.attitude.phi;
     idx = phi > 180;
     phi(idx) = phi(idx) - 360;
+    phi_est = sim_output.attitude.est_phi;
+    idx = phi_est > 180;
+    phi_est(idx) = phi_est(idx) - 360;
     
     figure('Name',strcat(mission_name, ' 312 Euler Angles')); 
     hold on;
     subplot(1,3,1); hold on;
     plot(sim_output.time, phi);
+    plot(sim_output.time, phi_est);
     ytickformat('%.3g');
     ylabel('\phi [deg]');
     xlabel(time_label);
+    legend('True','Estimate');
     
     % Force theta between -90 and 90:
     % Assumes no values btwn 90 and 270 (which there shouldn't be).
     theta = sim_output.attitude.theta;
     idx = theta > 270;
     theta(idx) = theta(idx) - 360;
+    theta_est = sim_output.attitude.est_theta;
+    idx = theta_est > 180;
+    theta_est(idx) = theta_est(idx) - 360;
     
     subplot(1,3,2); hold on;
     plot(sim_output.time, theta);
+    plot(sim_output.time, theta_est);
     ytickformat('%.3g');
     ylabel('\theta [deg]');
     xlabel(time_label);
+    legend('True','Estimate');
     
     % Force phi between -180 and 180:
     psi = sim_output.attitude.psi;
     idx = psi > 180;
     psi(idx) = psi(idx) - 360;
+    psi_est = sim_output.attitude.est_psi;
+    idx = psi_est > 180;
+    psi_est(idx) = psi_est(idx) - 360;
     
     subplot(1,3,3); hold on;
     plot(sim_output.time, psi);
+    plot(sim_output.time, psi_est);
     ytickformat('%.3g');
     ylabel('\psi [deg]');
     xlabel(time_label);
+    legend('True','Estimate');
     
     title_text = ['312 Euler Angles of ', mission_name];
     sgtitle(title_text);
@@ -389,4 +404,13 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['312 Euler Angles for Attitude Control Error ', mission_name];
     sgtitle(title_text);
     
+    %% Plot SC Mode
+    figure('Name',strcat(mission_name, ' Attitude Mode')); hold on;
+    title_text = ['Spacecraft Attitude Control Mode for ', mission_name];
+    title(title_text);
+    xlabel(time_label);
+    plot(sim_output.time, sim_output.attitude.SC_Mode);
+    ylabel('SC Mode');
+    [~,y] = enumeration('SCModeEnum');
+    yticklabels(y); yticks([0 1 2]);
 end

@@ -40,20 +40,23 @@ sim_constants.cp = sum((sim_constants.surf_areas*ones(1,size(sim_constants.surf_
 
 % Momentum wheel (from data sheet)
 sim_constants.I_r = 0.8*0.226*(0.032^2); % kg*m^2, moment of inertia of wheel
-sim_constants.w_r0 = 1; % rad/s, initial angular velocity of wheel
-sim_constants.w_rmax = 0.18/sim_constants.I_r; % rad/s, maximum spin rate of wheel
+sim_constants.w_r0 = 0; % rad/s, initial angular velocity of wheel
+sim_constants.w_rmax = 0.18/sim_constants.I_r; % rad/s, maximum spin rate of wheel (+/-)
+sim_constants.dw_rdtmax = 20e-3/sim_constants.I_r; % max. acceleration of wheel (+/-)
 sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor in princ coords (along body X axis)
 
 % Magnetorquers (from data sheet)
-sim_constants.m_magtor_max = 2.0; %Am^2
+sim_constants.m_magtor_max = 2E4; %Am^1
 
 % Control coefficients + constants
-sim_constants.k_p = 1;
-sim_constants.k_d = 1;
+desired_response_freq = 0.011; % rad/s
+desired_damp_factor = 0.9;
+sim_constants.k_p = sim_constants.I_princ*(desired_response_freq)^2;
+sim_constants.k_d = 2*desired_damp_factor*sqrt(sim_constants.I_princ.*sim_constants.k_p);
 sim_constants.state_debounce_time = 10; % sec
 sim_constants.slew_lower = sind(3); % mean anomaly delta from breakpoint at which slew begins
 sim_constants.slew_upper = sind(10); % mean anomaly delta from breakpoint at which slew ends
-sim_constants.tumble_limit = deg2rad(15); % rad/s, angular velocity limit at which SC goes into detumble mode
+sim_constants.tumble_limit = deg2rad(30); % rad/s, angular velocity limit at which SC goes into detumble mode
 
 % Attitude ICs
 sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate
@@ -61,16 +64,18 @@ sim_constants.q0 = [0; 0; 0; 1]; % principal axes initially aligned with inertia
 
 % Attitude sensors
 sim_constants.sensor_noise = true;
-sim_constants.gyro_error = (deg2rad([10 10 10])/2).^2; % rad/axis
+sim_constants.gyro_error = (deg2rad([0.2 0.2 0.2])/2).^2; % rad/axis
 sim_constants.gyro_bias = deg2rad([0.02 0.01 -0.03]/3600); % rad/axis
-sim_constants.ss_error = (deg2rad([3 3])/2).^2; % rad
-sim_constants.ss_bias = deg2rad([0.7 0.2]); % rad
-sim_constants.mag_error = (1E-6*[1 1 1]/2).^2; % Tesla, expect readings near 30-60E-6 Tesla
-sim_constants.mag_bias = [1E-7 1E-8 -2E-8]; % Tesla
+sim_constants.sunsensor_rotm = eye(3);
+sim_constants.ss_error = (deg2rad([.3 .3])/2).^2; % rad
+sim_constants.ss_bias = 0*deg2rad([0.7 0.2]); % rad
+sim_constants.mag_error = (1E-7*[1 1 1]/2).^2; % Tesla, expect readings near 30-60E-6 Tesla
+sim_constants.mag_bias = 0*[1E-7 1E-8 -2E-8]; % Tesla
 sim_constants.sensor_weights = [1 1 1]; % even weighting, three measurements made from 2 sensors (sun + magnetometer)
 
 % EKF Input
-sim_constants.Q = 1E-2*sim_constants.time_step*eye(7); % process noise
+sim_constants.cov0 = 1E-1*eye(7);
+sim_constants.Q = 5E-3*eye(7); % process noise
 sim_constants.R = eye(8); % measurement noise 
 sim_constants.R(1:3,1:3) = diag(sim_constants.gyro_error);
 sim_constants.R(4:6,4:6) = diag(sim_constants.mag_error);
