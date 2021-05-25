@@ -41,22 +41,21 @@ sim_constants.cp = sum((sim_constants.surf_areas*ones(1,size(sim_constants.surf_
 % Momentum wheel (from data sheet)
 sim_constants.I_r = 0.8*0.226*(0.032^2); % kg*m^2, moment of inertia of wheel
 sim_constants.w_r0 = 0; % rad/s, initial angular velocity of wheel
-sim_constants.w_rmax = 0.18/sim_constants.I_r; % rad/s, maximum spin rate of wheel (+/-)
-sim_constants.dw_rdtmax = 20e-3/sim_constants.I_r; % max. acceleration of wheel (+/-)
+sim_constants.w_rmax = 1e5; %0.18/sim_constants.I_r; % rad/s, maximum spin rate of wheel (+/-)
+sim_constants.dw_rdtmax = 1e3;%20e-3/sim_constants.I_r; % max. acceleration of wheel (+/-)
 sim_constants.r_rotor = (sim_constants.rotm.')*[1;0;0]; % orientation of rotor in princ coords (along body X axis)
 
 % Magnetorquers (from data sheet)
-sim_constants.m_magtor_max = 2; %Am^1
+sim_constants.m_magtor_max = 2e2;%2 %Am^1
 
 % Control coefficients + constants
-desired_response_freq = 0.011; % rad/s
-desired_damp_factor = 0.9;
-sim_constants.k_p = sim_constants.I_princ*(desired_response_freq)^2;
-sim_constants.k_d = 2*desired_damp_factor*sqrt(sim_constants.I_princ.*sim_constants.k_p);
-sim_constants.state_debounce_time = 10; % sec
-sim_constants.slew_lower = sind(3); % mean anomaly delta from breakpoint at which slew begins
-sim_constants.slew_upper = sind(10); % mean anomaly delta from breakpoint at which slew ends
-sim_constants.tumble_limit = deg2rad(30); % rad/s, angular velocity limit at which SC goes into detumble mode
+response_freq = 0.075; % rad/s, rougly 10*sim_constants.n0 (defined below)
+damp_factor = 0.95;
+sim_constants.k_p = sim_constants.I_princ*(response_freq)^2;
+sim_constants.k_d = 2*damp_factor*sqrt(sim_constants.I_princ.*sim_constants.k_p);
+sim_constants.state_debounce_time = 1; % sec
+sim_constants.slew_large_angle_lim = deg2rad(5); % cut-off above which non-linear control is used
+sim_constants.tumble_limit = deg2rad(100); % rad/s, angular velocity limit at which SC goes into detumble mode
 
 % Attitude ICs
 sim_constants.angvel0 = deg2rad([-6; 8; 0.1]); %rad/s, initial angular rate

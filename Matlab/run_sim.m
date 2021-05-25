@@ -11,7 +11,7 @@ constants;
 
 % Simulation settings
 sim_constants.simulation_time = 1.5*3600;
-sim_constants.time_step = 0.1; % s
+sim_constants.time_step = 0.05; % s
 sim_constants.tolerance = 10^-8;
 
 % Plot formatting
@@ -26,10 +26,10 @@ plot_format.time_increments = 'hours';
 plot_format = check_time_increments(plot_format);
 
 %% Run + process sim
-sim_constants.angvel0 = deg2rad([0;3;3]);%0.1*sim_constants.angvel0;
+sim_constants.angvel0 = deg2rad([0;3;3]);
 sim_constants.attitude_perturbations_on = false;
 sim_constants.orbital_perturbations_on = false;
-sim_constants.sensor_noise = true;
+sim_constants.sensor_noise = false;
 sim('Propagator');
 
 %% Extract + plot data
