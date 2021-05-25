@@ -233,7 +233,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     xlabel(time_label);
     ytickformat('%.3g');
     ylabel('L_3 [kg m^2 /s]');
-    
+       
     %% Plot Herpolhode & RTN Frame Ang Vel
     figure('Name',strcat(mission_name, ' Herpolhode & RTN'));
     subplot(3,2,[1 3 5]);
@@ -292,6 +292,45 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
         plot_coordtriads(sim_constants, sim_output, plot_format);
     end
 
+    %% Plot attitude control torques, magnetorquer, and momentum wheel info
+    figure('Name',strcat(mission_name, ' Control Torque')); hold on;
+    labs = {'x','y','z'};
+    for i = 1:3
+        subplot(1,3,i); hold on;
+        title_text = ['M_{control,' labs{i} '} of ' mission_name];
+        title(title_text);
+        xlabel(time_label);
+        ylabel('Torque, Nm');
+        plot(downsampled_time,downsample(sim_output.attitude.M_c(:,i),df));
+        plot(downsampled_time,downsample(sim_output.attitude.M_req(:,i),df));
+        legend('True Control','ADCS Torque Request');
+    end
+    
+    figure('Name',strcat(mission_name, ' Magnetorquers')); hold on;
+    labs = {'x','y','z'};
+    for i = 1:3
+        subplot(1,3,i); hold on;
+        title_text = ['Magnetorquer Dipole Along ' labs{i} ' for ' mission_name];
+        title(title_text);
+        xlabel(time_label);
+        ylabel(['m_' labs{i} ', Am^2']);
+        plot(downsampled_time,downsample(sim_output.attitude.m_magtor(:,i),df));
+    end
+    
+    figure('Name',strcat(mission_name, ' Mom. Wheel')); hold on;
+    subplot(1,2,1); hold on;
+    title_text = ['Momentum Wheel Speed for ' mission_name];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('\omega_r , rad/s');
+    plot(downsampled_time,downsample(sim_output.attitude.w_r,df));
+    subplot(1,2,2); hold on;
+    title_text = ['Momentum Wheel Accel. for ' mission_name];
+    title(title_text);
+    xlabel(time_label);
+    ylabel('\dot{\omega_r }, rad/s^2');
+    plot(downsampled_time,downsample(sim_output.attitude.dw_rdt,df));
+    
     %% Plot 312 Euler angles
     
     % Force phi between -180 and 180:
@@ -357,16 +396,20 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     phi_targ = sim_output.attitude.targ_phi;
     idx = phi_targ > 180;
     phi_targ(idx) = phi_targ(idx) - 360;
+    phi_true = sim_output.attitude.trueerr_phi;
+    idx = phi_true > 180;
+    phi_true(idx) = phi_true(idx) - 360;
     
     figure('Name', strcat(mission_name, 'Target Attitude Error')); 
     hold on;
     subplot(1,3,1); hold on;
     plot(sim_output.time, phi_targ);
     plot(sim_output.time, phi);
+    plot(sim_output.time, phi_true);
     ytickformat('%.3g');
     ylabel('\phi [deg]');
     xlabel(time_label);
-    legend('Target','Error');
+    legend('Target','Est. Error','True Error');
     
     % Force theta between -90 and 90:
     % Assumes no values btwn 90 and 270 (which there shouldn't be).
@@ -376,14 +419,18 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     theta_targ = sim_output.attitude.targ_theta;
     idx = theta_targ > 270;
     theta_targ(idx) = theta_targ(idx) - 360;
+    theta_true = sim_output.attitude.trueerr_theta;
+    idx = theta_true > 180;
+    theta_true(idx) = theta_true(idx) - 360;
     
     subplot(1,3,2); hold on;
     plot(sim_output.time, theta_targ);
     plot(sim_output.time, theta);
+    plot(sim_output.time, theta_true);
     ytickformat('%.3g');
     ylabel('\theta [deg]');
     xlabel(time_label);
-    legend('Target','Error');
+    legend('Target','Est. Error','True Error');
     
     % Force phi between -180 and 180:
     psi = sim_output.attitude.err_psi;
@@ -392,16 +439,61 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     psi_targ = sim_output.attitude.targ_psi;
     idx = psi_targ > 180;
     psi_targ(idx) = psi_targ(idx) - 360;
+    psi_true = sim_output.attitude.trueerr_psi;
+    idx = psi_true > 180;
+    psi_true(idx) = psi_true(idx) - 360;
     
     subplot(1,3,3); hold on;
     plot(sim_output.time, psi_targ);
     plot(sim_output.time, psi);
+    plot(sim_output.time, psi_true);
     ytickformat('%.3g');
     ylabel('\psi [deg]');
     xlabel(time_label);
-    legend('Target', 'Error');
+    legend('Target', 'Est. Error', 'True Error');
     
     title_text = ['312 Euler Angles for Attitude Control Error ', mission_name];
+    sgtitle(title_text);
+    
+    %% Plot Estimation Error
+    
+    % Force phi between -180 and 180:
+    phi_esterr = sim_output.attitude.esterr_phi;
+    idx = phi_esterr > 180;
+    phi_esterr(idx) = phi_esterr(idx) - 360;
+    
+    figure('Name',strcat(mission_name, ' Attitude Estimate')); 
+    hold on;
+    subplot(1,3,1); hold on;
+    plot(sim_output.time, phi_esterr);
+    ytickformat('%.3g');
+    ylabel('\phi [deg]');
+    xlabel(time_label);
+    
+    % Force theta between -90 and 90:
+    % Assumes no values btwn 90 and 270 (which there shouldn't be).
+    theta_esterr = sim_output.attitude.esterr_theta;
+    idx = theta_esterr > 180;
+    theta_esterr(idx) = theta_esterr(idx) - 360;
+    
+    subplot(1,3,2); hold on;
+    plot(sim_output.time, theta_esterr);
+    ytickformat('%.3g');
+    ylabel('\theta [deg]');
+    xlabel(time_label);
+    
+    % Force phi between -180 and 180:
+    psi_esterr = sim_output.attitude.esterr_psi;
+    idx = psi_esterr > 180;
+    psi_esterr(idx) = psi_esterr(idx) - 360;
+    
+    subplot(1,3,3); hold on;
+    plot(sim_output.time, psi_esterr);
+    ytickformat('%.3g');
+    ylabel('\psi [deg]');
+    xlabel(time_label);
+    
+    title_text = ['Attitude Estimation Error of ', mission_name];
     sgtitle(title_text);
     
     %% Plot SC Mode

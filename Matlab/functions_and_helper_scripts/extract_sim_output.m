@@ -1,6 +1,6 @@
 function sim_output = extract_sim_output(sim_constants, plot_format, ...
-    OE, dOE_dt, w, w_r, q, e, A, e_err, A_err,e_est, A_est, e_esterr, A_esterr, e_targ, A_targ, ...
-    M_perturbations, M_drag, M_grav, M_mag, M_SRP, ...
+    OE, dOE_dt, w, w_r, dw_rdt, q, e, A, e_err, A_err,e_est, A_est, e_esterr, A_esterr, e_targ, A_targ, ...
+    e_trueerr,A_trueerr,M_perturbations, M_drag, M_grav, M_mag, M_SRP, M_control,M_requested,m_magtor, ...
     ECI_positions, ECEF_positions, RTN2ECI, geod_positions, SC_Mode)
     %% Post-process data output from simulation for plotting and calcs
 
@@ -39,10 +39,16 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.dOE.w = dOE_dt.Data(:,5); % deg s-1
     sim_output.dOE.E = dOE_dt.Data(:,6); % deg s-1
     
-    %% For momentum wheel
+    %% For momentum wheel & other control
     
     sim_output.attitude.w_r = w_r.Data; % rad/s, angular velocity of momentum wheel
+    sim_output.attitude.dw_rdt = dw_rdt.Data; %rad/s^2, ang acceleration of momentum wheel
     sim_output.attitude.L_r = sim_constants.I_r*sim_output.attitude.w_r; % Nm*s, angular momentum of momentum wheel
+    
+    sim_output.attitude.m_magtor = m_magtor.Data; % Am, dipole moment applied by mag torquer
+    
+    sim_output.attitude.M_req = M_requested.Data; % Torque requested by ADCS, not actuator-limited
+    sim_output.attitude.M_c = M_control.Data; % True applied control torque
     
     %% For environmental perturbations
     
@@ -97,15 +103,21 @@ function sim_output = extract_sim_output(sim_constants, plot_format, ...
     sim_output.attitude.esterr_theta = rad2deg(e_esterr.Data(:,2)); % deg
     sim_output.attitude.esterr_psi = rad2deg(e_esterr.Data(:,3)); % deg
     
+    e_targ.Data = squeeze(e_targ.Data).';
     sim_output.attitude.targ_phi = rad2deg(e_targ.Data(:,1)); % deg
     sim_output.attitude.targ_theta = rad2deg(e_targ.Data(:,2)); % deg
     sim_output.attitude.targ_psi = rad2deg(e_targ.Data(:,3)); % deg
+    
+    sim_output.attitude.trueerr_phi = rad2deg(e_trueerr.Data(:,1)); % deg
+    sim_output.attitude.trueerr_theta = rad2deg(e_trueerr.Data(:,2)); % deg
+    sim_output.attitude.trueerr_psi = rad2deg(e_trueerr.Data(:,3)); % deg
     
     sim_output.attitude.A = permute(A.Data, [3,1,2]); % unitless, make time the first index
     sim_output.attitude.princ2inert = permute(A.Data, [3,2,1]); % inverse of A, rotates principal to inertial
     
     sim_output.attitude.A_est =  permute(A_est.Data, [3,1,2]);
     sim_output.attitude.A_esterr =  permute(A_esterr.Data, [3,1,2]);
+    sim_output.attitude.A_trueerr = permute(A_trueerr.Data, [3,1,2]);
     sim_output.attitude.A_err = permute(A_err.Data, [3,1,2]); % unitless, make time the first index, rotates actual to target
     sim_output.attitude.A_targ = permute(A_targ.Data, [3,1,2]); % unitless, make time the first index, rotates inertial to target
     %% For attitude plots in inertial axes
