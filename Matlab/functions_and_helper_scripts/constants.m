@@ -55,7 +55,7 @@ sim_constants.k_p = sim_constants.I_princ*(response_freq)^2;
 sim_constants.k_d = 2*damp_factor*sqrt(sim_constants.I_princ.*sim_constants.k_p);
 sim_constants.state_debounce_time = 10; % sec
 sim_constants.slew_large_angle_lim = deg2rad(5); % cut-off above which non-linear control is used
-sim_constants.tumble_limit = deg2rad(0.001); % rad/s, angular velocity limit at which SC goes into detumble mode
+sim_constants.tumble_limit = deg2rad(30); % rad/s, angular velocity limit at which SC goes into detumble mode
 sim_constants.target_average_window = 50; % sec, duration of moving average for target attitude
 
 % Attitude ICs
