@@ -3,5 +3,6 @@ classdef SCModeEnum < Simulink.IntEnumType
     STABILIZE(0)
     SLEW(1)
     DETUMBLE(2)
+    DESATURATE(3)
   end
 end

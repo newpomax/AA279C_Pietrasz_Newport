@@ -403,9 +403,9 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     figure('Name', strcat(mission_name, 'Target Attitude Error')); 
     hold on;
     subplot(1,3,1); hold on;
-    plot(sim_output.time, phi_targ);
-    plot(sim_output.time, phi);
-    plot(sim_output.time, phi_true);
+    plot(downsampled_time, downsample(phi_targ,df));
+    plot(downsampled_time, downsample(phi,df));
+    plot(downsampled_time, downsample(phi_true,df));
     ytickformat('%.3g');
     ylabel('\phi [deg]');
     xlabel(time_label);
@@ -424,9 +424,9 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     theta_true(idx) = theta_true(idx) - 360;
     
     subplot(1,3,2); hold on;
-    plot(sim_output.time, theta_targ);
-    plot(sim_output.time, theta);
-    plot(sim_output.time, theta_true);
+    plot(downsampled_time, downsample(theta_targ,df));
+    plot(downsampled_time, downsample(theta,df));
+    plot(downsampled_time, downsample(theta_true,df));
     ytickformat('%.3g');
     ylabel('\theta [deg]');
     xlabel(time_label);
@@ -444,9 +444,9 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     psi_true(idx) = psi_true(idx) - 360;
     
     subplot(1,3,3); hold on;
-    plot(sim_output.time, psi_targ);
-    plot(sim_output.time, psi);
-    plot(sim_output.time, psi_true);
+    plot(downsampled_time, downsample(psi_targ,df));
+    plot(downsampled_time, downsample(psi,df));
+    plot(downsampled_time, downsample(psi_true,df));
     ytickformat('%.3g');
     ylabel('\psi [deg]');
     xlabel(time_label);
@@ -465,7 +465,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     figure('Name',strcat(mission_name, ' Attitude Estimate')); 
     hold on;
     subplot(1,3,1); hold on;
-    plot(sim_output.time, phi_esterr);
+    plot(downsampled_time, downsample(phi_esterr,df));
     ytickformat('%.3g');
     ylabel('\phi [deg]');
     xlabel(time_label);
@@ -477,7 +477,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     theta_esterr(idx) = theta_esterr(idx) - 360;
     
     subplot(1,3,2); hold on;
-    plot(sim_output.time, theta_esterr);
+    plot(downsampled_time, downsample(theta_esterr,df));
     ytickformat('%.3g');
     ylabel('\theta [deg]');
     xlabel(time_label);
@@ -488,7 +488,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     psi_esterr(idx) = psi_esterr(idx) - 360;
     
     subplot(1,3,3); hold on;
-    plot(sim_output.time, psi_esterr);
+    plot(downsampled_time, downsample(psi_esterr,df));
     ytickformat('%.3g');
     ylabel('\psi [deg]');
     xlabel(time_label);
@@ -504,5 +504,5 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     plot(sim_output.time, sim_output.attitude.SC_Mode);
     ylabel('SC Mode');
     [~,y] = enumeration('SCModeEnum');
-    yticklabels(y); yticks([0 1 2]);
+    yticklabels(y); yticks([0 1 2 3]);
 end
