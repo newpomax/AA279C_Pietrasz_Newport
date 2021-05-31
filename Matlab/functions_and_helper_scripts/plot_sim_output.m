@@ -328,7 +328,7 @@ function plot_sim_output(sim_constants, sim_output, plot_format)
     title_text = ['Momentum Wheel Accel. for ' mission_name];
     title(title_text);
     xlabel(time_label);
-    ylabel('\dot{\omega_r }, rad/s^2');
+    ylabel('d\omega_r/dt, rad/s^2');
     plot(downsampled_time,downsample(sim_output.attitude.dw_rdt,df));
     
     %% Plot 312 Euler angles
